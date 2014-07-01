@@ -2,10 +2,13 @@
 
 # from __future__ import unicode_literals
 import time
+import sys
 import logging
+import pygame
 
 from conf import conf
 from GameEngine.GameStates.stateManager import StateManager
+from Graphx import graphx
 
 DONE = False
 
@@ -14,6 +17,7 @@ class Game(object):
 	def __init__(self):
 		super(Game, self).__init__()
 		logging.log(1, "Trace: Game.__init__()")
+		graphx.init()
 		self._init_time = time.time()
 		self._rendering_time = 0
 		self._updating_time = 0
@@ -66,9 +70,9 @@ class Game(object):
 			previous = current
 
 			# handle events
-			# FIXME
+			self.handleEvents()
 			# handle pressed keys
-			# FIXME
+			self.handlePressed()
 
 			# add the elapsed time to the lag. That allow to know whether 
 			# we need to update once or more on very slow hardware
@@ -89,12 +93,25 @@ class Game(object):
 			self._nb_renders += 1  # used for statistics
 
 	# handle a single event from the event queue
-	def handleEvent(self, event):
-		logging.log(1, 'Trace: Game.handleEvent(%s)' % event)
+	def handleEvents(self):
+		global DONE
+		logging.log(1, 'Trace: Game.handleEvent()')
+		for event in pygame.event.get():
+			logging.debug('Event: %s', event)
+			self._state_manager.handleEvent(event)
+			if event.type == pygame.QUIT: 
+				DONE = True
+				time.sleep(10000)
+				sys.exit()
+			if event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE:
+				DONE = True
 
 	# handle the keyboard and the mouse state
-	def handlePressed(self, kbs, ms):
-		logging.log(1, 'Trace: Game.handlePressed(%s, %s)' % (kbs, ms))
+	def handlePressed(self):
+		logging.log(1, 'Trace: Game.handlePressed()')
+		kbs = pygame.key.get_pressed()
+		ms = pygame.mouse.get_pressed()
+		self._state_manager.handlePressed(kbs, ms)
 
 	# Update the game for one fixed-time step
 	def update(self):
@@ -112,4 +129,4 @@ class Game(object):
 		logging.log(1, "Trace: ========> Game.render(%.5f)" % interpolation)
 		time.sleep(conf['game_engine']['simulate_hardware_lag']);
 		self._state_manager.render(interpolation)
-		pass
+		graphx.update()

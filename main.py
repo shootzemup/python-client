@@ -16,7 +16,7 @@ def parse_args():
     parser.add_argument('--verbose', '-v', action="count",
                         help="Set verbosity level. Default display only ERROR \
 messages, -v enable WARN and WARNING messages, -vv enable INFO messages, \
--vvv enable DEBUG messages, -vvvv enable TRACE messages", default=-4)
+-vvv enable DEBUG messages, -vvvv enable TRACE messages", default=0)
     parser.add_argument('-q', '--quiet', action="store_true",
                         help="Remove ALL messages")
     return parser.parse_args()
