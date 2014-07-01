@@ -81,6 +81,14 @@ class Game(object):
 			self._rendering_time += time.time() - t  # used for statistics
 			self._nb_renders += 1  # used for statistics
 
+	# handle a single event from the event queue
+	def handleEvent(self, event):
+		logging.log(1, 'Trace: Game.handleEvent(%s)' % event)
+
+	# handle the keyboard and the mouse state
+	def handlePressed(self, kbs, ms):
+		logging.log(1, 'Trace: Game.handlePressed(%s, %s)' % (kbs, ms))
+
 	# Update the game for one fixed-time step
 	def update(self):
 		logging.log(1, "Trace: Game.update()")
