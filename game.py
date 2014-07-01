@@ -5,7 +5,7 @@ import time
 import logging
 
 from conf import conf
-
+from GameEngine.GameStates.stateManager import StateManager
 
 DONE = False
 
@@ -19,7 +19,9 @@ class Game(object):
 		self._updating_time = 0
 		self._nb_updates = 0
 		self._nb_renders = 0
+		self._state_manager = StateManager()
 
+	# Statistics
 	@property
 	def init_time(self):
 	    return self._init_time
@@ -39,9 +41,9 @@ class Game(object):
 	def nb_renders(self, value):
 	    self._nb_renders = value
 	def getAverageRenderingTime(self):
-		return self._rendering_time / self._nb_renders
+		return not self._nb_renders or self._rendering_time / self._nb_renders
 	def getAverageUpdatingTime(self):
-		return self._updating_time / self._nb_updates
+		return not self._nb_updates or self._updating_time / self._nb_updates
 	
 		
 	# Run the main game loop.
@@ -62,6 +64,11 @@ class Game(object):
 			current = time.time()
 			elapsed = current - previous
 			previous = current
+
+			# handle events
+			# FIXME
+			# handle pressed keys
+			# FIXME
 
 			# add the elapsed time to the lag. That allow to know whether 
 			# we need to update once or more on very slow hardware
@@ -91,8 +98,8 @@ class Game(object):
 
 	# Update the game for one fixed-time step
 	def update(self):
-		logging.log(1, "Trace: Game.update()")
-		pass
+		logging.log(1, "Trace: ========> Game.update()")
+		self._state_manager.update()
 
 	# render the game objects.
 	# If some objects are moving from one position to another, it should
@@ -102,11 +109,7 @@ class Game(object):
 	# drawing, this interpolation computation should be done in the models of 
 	# the game objects.
 	def render(self, interpolation):
-		logging.log(1, "Trace: Game.render(%.5f)" % interpolation)
+		logging.log(1, "Trace: ========> Game.render(%.5f)" % interpolation)
 		time.sleep(conf['game_engine']['simulate_hardware_lag']);
+		self._state_manager.render(interpolation)
 		pass
-
-
-if __name__ == "__main__":
-	print "Game is starting..."
-	Game().run()

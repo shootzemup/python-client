@@ -3,6 +3,7 @@
 import logging
 
 from conf import conf
+from introState import IntroState
 
 
 class StateManager(object):
@@ -11,6 +12,9 @@ class StateManager(object):
 		super(StateManager, self).__init__()
 		logging.log(1, "Trace: StateManager.__init__()")
 		self._state_stack = []
+		# when initalizing, the introstate is the first to be
+		# pushed on the stack
+		self.pushState(IntroState.getInstance())
 
 	# handle a single event from the event queue
 	def handleEvent(self, event):
@@ -23,9 +27,9 @@ class StateManager(object):
 	def update(self):
 		logging.log(1, "Trace: StateManager.update()")
 		for state in self._state_stack:
-			state.update()
+			state.update(self)
 
-	def renter(self, interpolation):
+	def render(self, interpolation):
 		logging.log(1, "Trace: StateManager.render(%.5f)" % interpolation)
 		for state in self._state_stack:
 			state.render(interpolation)
