@@ -55,7 +55,8 @@ class VideoPlayer(object):
 
 	def render(self):
 		logging.log(1, "Trace: VideoPlayer.render()")
-		if self._playing and self._movie.get_time() == self._movie_length - 0.1:
+		if self._playing and self._movie.get_time() > self._movie_length - 0.1:
+			logging.info("Video ended!")
 			self.stop()
 		elif self._playing:
 			logging.debug("Playing video... %.2f/%.2f" 
