@@ -55,7 +55,8 @@ class Game(object):
 		return not self._nb_renders or self._rendering_time / self._nb_renders
 	def getAverageUpdatingTime(self):
 		return not self._nb_updates or self._updating_time / self._nb_updates
-
+	def getAverageFPS(self):
+		return not self._nb_renders or (time.time() - self._init_time) / self._nb_renders
 
 	#m: run: Run the main game loop.
 	#c: It updates the game with a fixed time step but can update multiple time
@@ -102,7 +103,7 @@ class Game(object):
 	#m: handleEvents: handle a single event from the event queue
 	def handleEvents(self):
 		global DONE
-		logging.log(1, 'Trace: Game.handleEvent()')
+		logging.log(1, 'Trace: Game.handleEvents()')
 		for event in pygame.event.get():
 			logging.debug('Event: %s', event)
 			self._state_manager.handleEvent(event)
@@ -112,6 +113,7 @@ class Game(object):
 				sys.exit()
 			if event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE:
 				DONE = True
+			graphx.handleEvent(event)
 
 	#m: handlePressed: handle the keyboard and the mouse state
 	def handlePressed(self):
@@ -119,6 +121,7 @@ class Game(object):
 		kbs = pygame.key.get_pressed()
 		ms = pygame.mouse.get_pressed()
 		self._state_manager.handlePressed(kbs, ms)
+		graphx.handlePressed(kbs, ms)
 
 	#m: update: Update the game for one fixed-time step
 	def update(self):

@@ -51,6 +51,7 @@ def main():
         game.getAverageRenderingTime())
     logging.info("Average updating time: %.5fs" %
         game.getAverageUpdatingTime())
+    logging.info("Average FPS: %.2f" % game.getAverageFPS())
     if game.getAverageUpdatingTime() > conf['game_engine']['update_time_step']:
         logging.warning("\tAverage updating time is too long!")
         logging.warning("\t Shoud be <= %.5f" 
