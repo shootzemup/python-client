@@ -4,7 +4,7 @@ import logging
 
 from conf import conf
 from state import State
-from menuState import MenuState
+from authentState import AuthentState
 from Graphx import graphx
 
 
@@ -27,8 +27,8 @@ class IntroState(State):
 		logging.log(1, "Trace: IntroState.handlePressed(...)")
 
 	def endState(self):
-		logging.info("Changing state to MenuState.")
-		self._state_manager.changeState(MenuState.getInstance())
+		logging.info("Changing state to AuthentState.")
+		self._state_manager.changeState(AuthentState.getInstance())
 
 	def update(self, stateManager):
 		logging.log(1, "Trace: IntroState.update(%s)" % stateManager)
