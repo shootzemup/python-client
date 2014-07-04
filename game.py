@@ -109,8 +109,6 @@ class Game(object):
 			self._state_manager.handleEvent(event)
 			if event.type == pygame.QUIT:
 				DONE = True
-				time.sleep(10000)
-				sys.exit()
 			if event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE:
 				DONE = True
 			graphx.handleEvent(event)
