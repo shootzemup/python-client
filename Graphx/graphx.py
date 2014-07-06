@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 import pygame
 import logging
+from functools import wraps
 
 from conf import conf
 from videoPlayer import VideoPlayer
@@ -10,32 +11,17 @@ from videoPlayer import VideoPlayer
 
 instance = None
 
-def update():
-	global instance
-	instance.update()
+def singletonize(method):
+	@wraps(method)
+	def wrapper(*args, **kwargs):
+		logging.debug("Trace: wrapper(%s, %s)" % (args, kwargs))
+		logging.debug("Calling: %s(%s, %s, %s)" % (method.__name__, instance, args, kwargs))
+		return method(instance, *args, **kwargs)
+	return wrapper
 
 def init():
 	global instance
 	instance = Graphx()
-
-def getScreen():
-	return instance._screen
-
-def draw(surface, position=(0, 0)):
-	instance.draw(surface, position)
-
-def playVideo(link, on_video_end):
-	instance.playVideo(link, on_video_end)
-
-def handleEvent(event):
-	instance.handleEvent(event)
-
-def handlePressed(kbs, ms):
-	instance.handlePressed(kbs, ms)
-
-def getScreenSize():
-	return instance._screen_size
-
 
 class Graphx(object):
 	"""Represent the graphx engine"""
@@ -65,9 +51,22 @@ class Graphx(object):
 		pygame.display.flip()
 		self._screen.fill(conf['graphx']['screen_base_color'])
 
-	def draw(self, surface, position):
+	def draw(self, surface, position=(0, 0)):
 		logging.log(1, "Trace: Graphx.draw(%s, %s)" % (surface, position))
 		self._screen.blit(surface, position)
 
 
-		
+	def getScreen(self):
+		return self._screen
+
+	def getScreenSize(self):
+		print "Screen size: ", self._screen_size
+		return self._screen_size
+
+draw = singletonize(Graphx.draw)
+update = singletonize(Graphx.update)
+playVideo = singletonize(Graphx.playVideo)
+handleEvent = singletonize(Graphx.handleEvent)
+handlePressed = singletonize(Graphx.handlePressed)
+getScreen = singletonize(Graphx.getScreen)
+getScreenSize = singletonize(Graphx.getScreenSize)
