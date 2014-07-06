@@ -5,6 +5,9 @@ from pygame.locals import *
 import logging
 from functools import wraps
 
+from resources.i18n.lang import i18n
+from conf import conf
+
 instance = None
 
 def singletonize(method):
@@ -160,6 +163,9 @@ class EventsManager(object):
 		"""
 		Register a new callback to be caled when an event is fired
 		name -- the unique name of the event
+				Note: The convention will be to prefix the name by the class 
+				in which the event is registered, eg: `Game.onEscapeKeyUp`,
+				`Game.onQuit`, etc...
 		event -- the tuple (type, value) that correspond to the event that will
 				 make the callback to be called. 
 				 Note: If the value is not specified, if will be given to the 
@@ -189,6 +195,19 @@ class EventsManager(object):
 		if not name in self._events_to_delete:  # prevent duplacates
 			self._events_to_delete.append(name)
 
+	def listRegisteredEvents(self):
+		logging.info(">>> Registered events: ")
+		for i, name in enumerate(self._names):
+			logging.info(" %d. %s -- %s: %s" 
+						 % (i, name, i18n('events/names/' + name),
+							i18n('events/descriptions/' + name)))
+		logging.info(">>> Registered combinations: ")
+		for i, name in enumerate(self._registered_combinations):
+			logging.info(" %d. %s -- %s: %s" 
+						 % (i, name, i18n('events/names/' + name),
+						 	i18n('events/descriptions/' + name)))
+
+
 
 handleEvent = singletonize(EventsManager.handleEvent)
 handlePressed = singletonize(EventsManager.handlePressed)
@@ -197,3 +216,4 @@ unregisterCombination = singletonize(EventsManager.unregisterCombination)
 registerEvent = singletonize(EventsManager.registerEvent)
 unregisterEvent = singletonize(EventsManager.unregisterEvent)
 update = singletonize(EventsManager.update)
+listRegisteredEvents = singletonize(EventsManager.listRegisteredEvents)

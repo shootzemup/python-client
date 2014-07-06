@@ -34,11 +34,11 @@ class VideoPlayer(object):
 		self._movie.play()
 		self._playing = True
 		# register events
-		eventsManager.registerEvent('skipVideoUsingSpace', 
+		eventsManager.registerEvent('VideoPlayer.skipVideoUsingSpace', 
 			(pygame.KEYDOWN, pygame.K_ESCAPE), self.stop)
-		eventsManager.registerEvent('skipVideoUsingEnter',
+		eventsManager.registerEvent('VideoPlayer.skipVideoUsingEnter',
 			(pygame.KEYDOWN, pygame.K_RETURN), self.stop)
-		eventsManager.registerEvent('skipVideoUsingEscape',
+		eventsManager.registerEvent('VideoPlayer.skipVideoUsingEscape',
 			(pygame.KEYDOWN, pygame.K_SPACE), self.stop)
 
 	def stop(self):

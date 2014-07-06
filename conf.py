@@ -23,6 +23,7 @@ conf = {
 		'menu': {
 			'default_menu_item': 'resources/menu/default_menu_item.png',
 			'default_container': 'resources/menu/default_container.png'
-		}
+		},
+		'language': 'fr'
 	}
 }

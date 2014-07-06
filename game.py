@@ -25,11 +25,11 @@ class Game(object):
 
 		#c: register events
 		eventsManager.registerEvent(
-			'onEscapeKeyUp', (pygame.KEYUP, pygame.K_ESCAPE), self.onQuit)
+			'Game.onKeyQuit', (pygame.KEYUP, pygame.K_ESCAPE), self.onQuit)
 		eventsManager.registerEvent(
-			'onQuit', (pygame.QUIT, None), self.onQuit)
+			'Game.onWindowExit', (pygame.QUIT, None), self.onQuit)
 		eventsManager.registerCombination(
-			'combinationTest', [pygame.K_a, pygame.K_b, pygame.K_c], [], 
+			'Game.combinationTest', [pygame.K_a, pygame.K_b, pygame.K_c], [], 
 			self.onCombinationTest)
 
 		#a: _init_time: allow to compute some running statistics
@@ -50,6 +50,7 @@ class Game(object):
 		global DONE
 		logging.warning("Game will quit!")
 		DONE = True
+		eventsManager.listRegisteredEvents()
 
 	def onCombinationTest(self):
 		logging.warning('CombinationTest is activated!')
