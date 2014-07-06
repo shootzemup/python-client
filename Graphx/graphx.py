@@ -14,8 +14,6 @@ instance = None
 def singletonize(method):
 	@wraps(method)
 	def wrapper(*args, **kwargs):
-		logging.debug("Trace: wrapper(%s, %s)" % (args, kwargs))
-		logging.debug("Calling: %s(%s, %s, %s)" % (method.__name__, instance, args, kwargs))
 		return method(instance, *args, **kwargs)
 	return wrapper
 

@@ -9,6 +9,7 @@ import pygame
 from conf import conf
 from GameEngine.GameStates.stateManager import StateManager
 from Graphx import graphx
+from EventsManager import eventsManager
 
 DONE = False
 
@@ -18,7 +19,16 @@ class Game(object):
 	def __init__(self):
 		super(Game, self).__init__()
 		logging.log(1, "Trace: Game.__init__()")
+		#c: initialize singletons
 		graphx.init()
+		eventsManager.init()
+
+		#c: register events
+		eventsManager.registerEvent(
+			'onEscapeKeyUp', (pygame.KEYUP, pygame.K_ESCAPE), self.onQuit)
+		eventsManager.registerEvent(
+			'onQuit', (pygame.QUIT, None), self.onQuit)
+
 		#a: _init_time: allow to compute some running statistics
 		self._init_time = time.time()
 		#a: _rendering_time: contains the total time spent for rendering
@@ -31,6 +41,14 @@ class Game(object):
 		self._nb_renders = 0
 		#a: _state_manager: allow to manage the state stack
 		self._state_manager = StateManager()
+
+	# events
+	def onQuit(self):
+		global DONE
+		logging.warning("Game will quit!")
+		DONE = True
+
+
 
 	# Statistics
 	@property
@@ -102,15 +120,11 @@ class Game(object):
 
 	#m: handleEvents: handle a single event from the event queue
 	def handleEvents(self):
-		global DONE
 		logging.log(1, 'Trace: Game.handleEvents()')
 		for event in pygame.event.get():
 			logging.debug('Event: %s', event)
+			eventsManager.handleEvent(event)
 			self._state_manager.handleEvent(event)
-			if event.type == pygame.QUIT:
-				DONE = True
-			if event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE:
-				DONE = True
 			graphx.handleEvent(event)
 
 	#m: handlePressed: handle the keyboard and the mouse state
@@ -118,6 +132,7 @@ class Game(object):
 		logging.log(1, 'Trace: Game.handlePressed()')
 		kbs = pygame.key.get_pressed()
 		ms = pygame.mouse.get_pressed()
+		eventsManager.handlePressed(kbs, ms)
 		self._state_manager.handlePressed(kbs, ms)
 		graphx.handlePressed(kbs, ms)
 
