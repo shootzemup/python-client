@@ -24,7 +24,7 @@ class EventsManager(object):
 	"""
 	def __init__(self):
 		super(EventsManager, self).__init__()
-		logging.log(1, "Trace: EventManager.__init__()")
+		logging.log(1, "Trace: EventsManager.__init__()")
 		# registered allow to get all the callbacks related to an event
 		self._registered = {}
 		# names allow to get an event from the name
@@ -37,8 +37,12 @@ class EventsManager(object):
 		# list of registered combinations
 		self._registered_combinations = {}
 
+		# waiting to be deleted at the next update
+		self._combinations_to_delete = []
+		self._events_to_delete = []
+
 	def _call_callbacks(self, event, event_value=None):
-		logging.log(1, "Trace: EventManager._call_callbacks(%s, %s)"
+		logging.log(1, "Trace: EventsManager._call_callbacks(%s, %s)"
 						% (event, event_value))
 		for cb_name in self._registered[event]:
 			logging.debug("Event callback '%s' called." % cb_name)
@@ -48,7 +52,7 @@ class EventsManager(object):
 				self._registered[event][cb_name]()
 
 	def handleEvent(self, event):
-		logging.log(1, "Trace: EventManager.handleEvent(%s)" % event)
+		logging.log(1, "Trace: EventsManager.handleEvent(%s)" % event)
 		# construct the event if it is valid
 		if event.type == KEYDOWN or event.type == KEYUP:
 			reg_ev = (event.type, event.key)
@@ -84,13 +88,15 @@ class EventsManager(object):
 				logging.warning("Unexpected event: %s" % event)
 
 	def handlePressed(self, kbs, ms):
-		logging.log(1, "Trace: EventManager.handlePressed(%s, %s)" 
+		logging.log(1, "Trace: EventsManager.handlePressed(%s, %s)" 
 						% (kbs, ms))
 		# allow to check key combination, that can be used for shortcuts
-		for combin in self._registered_combinations:
+		for name in self._registered_combinations:
+			combin = self._registered_combinations[name]
+			logging.debug("Checking combination: %s" % (combin))
 			# activate is true if combination contains either keycode or 
 			# mousebutton list
-			activate = len(combit['keycodes']) > 0 or \
+			activate = len(combin['keycodes']) > 0 or \
 				len(combin['mousebuttons']) > 0
 			# and all the keys presence in kbs of the registered keycode.
 			# if one is not true in the kbs list, activate will be false
@@ -100,7 +106,25 @@ class EventsManager(object):
 			for but in combin['mousebuttons']:
 				activate = activate and ms[but]
 			if activate:
-				self._registered_combinations['callback']()
+				combin['callback']()
+
+	def update(self):
+		logging.log(1, "Trace: EventsManager.update()")
+		# if events or combinations are waiting to be deleted, do it now.
+		# (note: this function is called once per frame)
+		self._unregister_waiting_queue()
+
+
+	def _unregister_waiting_queue(self):
+		# delete waiting events to be unregistered
+		for name in self._events_to_delete:
+			del self._registered[self._names[name]][name]
+		del self._events_to_delete[:]
+
+		# delete waiting combinations to be unregistered
+		for name in self._combinations_to_delete:
+			del self._registered_combinations[name]
+		del self._combinations_to_delete[:]
 
 	def registerCombination(self, name, keycodes, mousebuttons, callback):
 		"""
@@ -114,7 +138,7 @@ class EventsManager(object):
 		callback -- callback to be called when both listed keycodes and 
 					mousebuttons are pressed at the same time
 		"""
-		logging.log(1, "Trace: EventManager.registerCombination(%s, %s, %s, %s)" 
+		logging.log(1, "Trace: EventsManager.registerCombination(%s, %s, %s, %s)" 
 						% (name, keycodes, mousebuttons, callback))
 		logging.debug("Registering combination %s on callback: %s"
 						% (name, callback))
@@ -125,8 +149,12 @@ class EventsManager(object):
 		}
 
 	def unregisterCombination(self, name):
-		logging.log(1, "Trace: EventManager.unregisterCombination(%s)" % name)
-		del self._registered_combinations[name]
+		logging.log(1, "Trace: EventsManager.unregisterCombination(%s)" % name)
+		logging.debug("Unregistering event '%s' from list: %s"
+						% (name, self._registered_combinations))
+		# add the combination to the list of combinations waiting to be deleted
+		if not name in self._combinations_to_delete:  # prevent duplicates
+			self._combinations_to_delete.append(name)
 
 	def registerEvent(self, name, event, callback):
 		"""
@@ -139,7 +167,7 @@ class EventsManager(object):
 		callback -- the callback that will be called when the given event is
 					fired
 		"""
-		logging.log(1, "Trace: EventManager.registerEvent(%s, %s, %s)" 
+		logging.log(1, "Trace: EventsManager.registerEvent(%s, %s, %s)" 
 						% (name, event, callback))
 		logging.debug("Registering event %s on callback: %s" % (name, callback))
 		# create or add the the dict of callbacks 
@@ -147,16 +175,19 @@ class EventsManager(object):
 		if event in self._registered:
 			self._registered[event][name] = callback
 		else:
-			self._registered[event] = {'name': callback}
+			self._registered[event] = {name: callback}
 		# save that the name matching this event
 		self._names[name] = event
 
 	def unregisterEvent(self, name):
 		#retrieve the event from the name, then delete the callback
 		# that is registered under this name
-		logging.log(1, "Trace: EventManager.registerEvent(%s)" % name)
-
-		del self._registered[self._names[name]][name]
+		logging.log(1, "Trace: EventsManager.registerEvent(%s)" % name)
+		logging.debug("Unregistering event '%s' from list: %s" % (name, self._names))
+		logging.debug("Unregistering event '%s' from list: %s" % (name, self._registered[self._names[name]]))
+		# add the event to the list of events waiting to be deleted
+		if not name in self._events_to_delete:  # prevent duplacates
+			self._events_to_delete.append(name)
 
 
 handleEvent = singletonize(EventsManager.handleEvent)
@@ -165,3 +196,4 @@ registerCombination = singletonize(EventsManager.registerCombination)
 unregisterCombination = singletonize(EventsManager.unregisterCombination)
 registerEvent = singletonize(EventsManager.registerEvent)
 unregisterEvent = singletonize(EventsManager.unregisterEvent)
+update = singletonize(EventsManager.update)

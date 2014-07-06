@@ -27,22 +27,6 @@ class Container(MenuItem):
 	def addMenuItem(self, item):
 		self._menuItems.append(item)
 
-	def handleEvent(self, event):
-		logging.log(1, "Trace: Container.handleEvent(%s)" % event)
-		# call mother class pressed keys handling function
-		MenuItem.handleEvent(self, event)
-		# successively let all the children handle the pressed keys
-		for item in self._menuItems:
-			item.handleEvent(event)
-
-	def handlePressed(self, kbs, ms):
-		logging.log(1, "Trace: Container.handlePressed(...)")
-		# call mother class pressed keys handling function
-		MenuItem.handlePressed(self, kbs, ms)
-		# successively let all the children handle the pressed keys
-		for item in self._menuItems:
-			item.handlePressed(kbs, ms)
-
 	def update(self, stateManager):
 		logging.log(1, "Trace: Container.update(...)")
 		# call mother class updating function

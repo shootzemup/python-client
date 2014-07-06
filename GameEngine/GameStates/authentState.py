@@ -21,15 +21,6 @@ class AuthentState(State):
 							itemName="MenuItem")
 		self._page.addMenuItem(menuItem)
 
-	def handleEvent(self, event):
-		logging.log(1, "Trace: AuthentState.handleEvent(%s)" % event)
-		self._page.handleEvent(event)
-
-	def handlePressed(self, kbs, ms):
-		logging.log(1, "Trace: AuthentState.handlePressed(...)")
-		self._page.handlePressed(kbs, ms)
-
-
 	def update(self, stateManager):
 		logging.log(1, "Trace: AuthentState.update(%s)" % stateManager)
 		self._page.update(stateManager)

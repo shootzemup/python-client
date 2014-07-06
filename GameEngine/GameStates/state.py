@@ -26,12 +26,6 @@ class State(object):
 		super(State, self).__init__()
 		logging.log(1, "Trace: State.__init__()")
 
-	def handleEvent(self, event):
-		logging.log(1, 'Trace: State.handleEvent(%s)' % event)
-
-	def handlePressed(self, kbs, ms):
-		logging.log(1, 'Trace: State.handlePressed(...)')
-
 	def update(self, stateManager):
 		logging.log(1, "Trace: State.update(%s)" % stateManager)
 

@@ -40,20 +40,6 @@ class MenuItem(object):
 		self._behaviour = MenuItemBehaviour(self._model)
 		self._view = MenuItemView(self._model)
 
-	def handleEvent(self, event):
-		"""
-		Let the behaviour of the menu item handle the event
-		"""
-		logging.log(1, "Trace: MenuItem.handleEvent(%s)" % event)
-		self._behaviour.handleEvent(event)
-
-	def handlePressed(self, kbs, ms):
-		"""
-		Let the behaviour of the menu item handle the pressed keys
-		"""
-		logging.log(1, "Trace: MenuItem.handlePressed(...)")
-		self._behaviour.handlePressed(kbs, ms)
-
 	def update(self, stateManager):
 		"""
 		Let the behaviour of the menu item update the item

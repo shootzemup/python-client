@@ -30,14 +30,6 @@ class Graphx(object):
 		self._screen = pygame.display.set_mode(self._screen_size)
 		self._video_player = VideoPlayer()
 
-	def handleEvent(self, event):
-		logging.log(1, "Trace: Graphx.handleEvent(%s)" % event)
-		self._video_player.handleEvent(event)
-
-	def handlePressed(self, kbs, ms):
-		logging.log(1, "Trace: Graphx.handlePressed(...)")
-		self._video_player.handlePressed(kbs, ms)
-
 	def playVideo(self, link, on_video_end):
 		self._video_player.play(link, on_video_end)
 
@@ -58,13 +50,10 @@ class Graphx(object):
 		return self._screen
 
 	def getScreenSize(self):
-		print "Screen size: ", self._screen_size
 		return self._screen_size
 
 draw = singletonize(Graphx.draw)
 update = singletonize(Graphx.update)
 playVideo = singletonize(Graphx.playVideo)
-handleEvent = singletonize(Graphx.handleEvent)
-handlePressed = singletonize(Graphx.handlePressed)
 getScreen = singletonize(Graphx.getScreen)
 getScreenSize = singletonize(Graphx.getScreenSize)

@@ -5,6 +5,7 @@ import logging
 
 import graphx
 from conf import conf
+from EventsManager import eventsManager
 
 
 class VideoPlayer(object):
@@ -32,6 +33,13 @@ class VideoPlayer(object):
 		self._movie_length = self._movie.get_length()
 		self._movie.play()
 		self._playing = True
+		# register events
+		eventsManager.registerEvent('skipVideoUsingSpace', 
+			(pygame.KEYDOWN, pygame.K_ESCAPE), self.stop)
+		eventsManager.registerEvent('skipVideoUsingEnter',
+			(pygame.KEYDOWN, pygame.K_RETURN), self.stop)
+		eventsManager.registerEvent('skipVideoUsingEscape',
+			(pygame.KEYDOWN, pygame.K_SPACE), self.stop)
 
 	def stop(self):
 		logging.log(1, "Trace: VideoPlayer.stop()")
@@ -40,18 +48,6 @@ class VideoPlayer(object):
 		self._movie.stop()
 		self._playing = False
 		self._on_video_end()
-
-	def handleEvent(self, event):
-		logging.log(1, "Trace: VideoPlayer.handleEvent(%s)" % event)
-		if event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_ESCAPE or \
-					event.key == pygame.K_RETURN or \
-					event.key == pygame.K_SPACE:
-				logging.info("Skipping video!")
-				self.stop()
-
-	def handlePressed(self, kbs, ms):
-		logging.log(1, "Trace: VideoPlayer.handlePressed(...)")
 
 	def render(self):
 		logging.log(1, "Trace: VideoPlayer.render()")

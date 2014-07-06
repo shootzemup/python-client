@@ -20,12 +20,6 @@ class IntroState(State):
 		self._state_manager = None
 		graphx.playVideo(conf['resources']['intro_video'], self.endState)
 
-	def handleEvent(self, event):
-		logging.log(1, "Trace: IntroState.handleEvent(%s)" % event)
-
-	def handlePressed(self, kbs, ms):
-		logging.log(1, "Trace: IntroState.handlePressed(...)")
-
 	def endState(self):
 		logging.info("Changing state to AuthentState.")
 		self._state_manager.changeState(AuthentState.getInstance())

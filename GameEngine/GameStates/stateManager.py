@@ -16,14 +16,6 @@ class StateManager(object):
 		# pushed on the stack
 		self.pushState(IntroState.getInstance())
 
-	# handle a single event from the event queue
-	def handleEvent(self, event):
-		logging.log(1, 'Trace: StateManager.handleEvent(%s)' % event)
-
-	# handle the keyboard and the mouse state
-	def handlePressed(self, kbs, ms):
-		logging.log(1, 'Trace: StateManager.handlePressed(...)')
-
 	def update(self):
 		logging.log(1, "Trace: StateManager.update()")
 		for state in self._state_stack:

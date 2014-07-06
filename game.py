@@ -28,6 +28,9 @@ class Game(object):
 			'onEscapeKeyUp', (pygame.KEYUP, pygame.K_ESCAPE), self.onQuit)
 		eventsManager.registerEvent(
 			'onQuit', (pygame.QUIT, None), self.onQuit)
+		eventsManager.registerCombination(
+			'combinationTest', [pygame.K_a, pygame.K_b, pygame.K_c], [], 
+			self.onCombinationTest)
 
 		#a: _init_time: allow to compute some running statistics
 		self._init_time = time.time()
@@ -47,6 +50,11 @@ class Game(object):
 		global DONE
 		logging.warning("Game will quit!")
 		DONE = True
+
+	def onCombinationTest(self):
+		logging.warning('CombinationTest is activated!')
+		eventsManager.unregisterCombination('combinationTest')
+		eventsManager.unregisterEvent('onEscapeKeyUp')
 
 
 
@@ -124,8 +132,6 @@ class Game(object):
 		for event in pygame.event.get():
 			logging.debug('Event: %s', event)
 			eventsManager.handleEvent(event)
-			self._state_manager.handleEvent(event)
-			graphx.handleEvent(event)
 
 	#m: handlePressed: handle the keyboard and the mouse state
 	def handlePressed(self):
@@ -133,13 +139,12 @@ class Game(object):
 		kbs = pygame.key.get_pressed()
 		ms = pygame.mouse.get_pressed()
 		eventsManager.handlePressed(kbs, ms)
-		self._state_manager.handlePressed(kbs, ms)
-		graphx.handlePressed(kbs, ms)
 
 	#m: update: Update the game for one fixed-time step
 	def update(self):
 		logging.log(1, "Trace: ========> Game.update()")
 		self._state_manager.update()
+		eventsManager.update()
 
 	#m: render: render the game objects.
 	#c: If some objects are moving from one position to another, it should
