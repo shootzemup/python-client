@@ -3,9 +3,11 @@
 import logging
 
 conf = {
+	'name': 'Shootzemup',
+	'state': 'DEBUG',
 	'game_engine': {
 		'update_time_step': 0.02,
-		'simulate_hardware_lag': 0.00
+		'simulate_hardware_lag': 0
 	},
 	'logging': {
 		'log_file_level': 0,  #logging.DEBUG

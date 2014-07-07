@@ -30,6 +30,7 @@ class Graphx(object):
 		self._screen = pygame.display.set_mode(self._screen_size)
 		self._video_player = VideoPlayer()
 
+		
 	def playVideo(self, link, on_video_end):
 		self._video_player.play(link, on_video_end)
 
@@ -52,8 +53,12 @@ class Graphx(object):
 	def getScreenSize(self):
 		return self._screen_size
 
+	def cleanUp(self):
+		pass
+
 draw = singletonize(Graphx.draw)
 update = singletonize(Graphx.update)
 playVideo = singletonize(Graphx.playVideo)
 getScreen = singletonize(Graphx.getScreen)
 getScreenSize = singletonize(Graphx.getScreenSize)
+cleanUp = singletonize(Graphx.cleanUp)

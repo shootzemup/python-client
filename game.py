@@ -44,6 +44,8 @@ class Game(object):
 		self._nb_renders = 0
 		#a: _state_manager: allow to manage the state stack
 		self._state_manager = StateManager()
+		#a: _last_caption_update: allow to update the caption title only sometimes
+		self._last_caption_update = 0
 
 	# events
 	def onQuit(self):
@@ -113,6 +115,7 @@ class Game(object):
 			#c: we need to update once or more on very slow hardware
 			lag += elapsed
 
+			nb_updates = 0
 			#c: catch up the lag
 			while lag >= conf['game_engine']['update_time_step']:
 				t = time.time()  # used for statistics
@@ -120,11 +123,18 @@ class Game(object):
 				updating_time = time.time() - t
 				self._updating_time += updating_time  # used for statistics
 				self._nb_updates += 1
+				nb_updates += 1
 				lag -= conf['game_engine']['update_time_step']
 
 			t = time.time()  # used for statistics
 			self.render(lag / conf['game_engine']['update_time_step'])
 			self._rendering_time += time.time() - t  # used for statistics
+			if (time.time() - self._last_caption_update) > 5:
+				pygame.display.set_caption(
+					"%s - State: %s - FPS: %.1f - Step / frame: %d"
+					% (conf['name'], conf['state'], 1.0 / (time.time() - t), 
+						nb_updates))
+				self._last_caption_update = time.time()
 			self._nb_renders += 1  # used for statistics
 
 	#m: handleEvents: handle a single event from the event queue
@@ -160,3 +170,8 @@ class Game(object):
 		time.sleep(conf['game_engine']['simulate_hardware_lag']);
 		self._state_manager.render(interpolation)
 		graphx.update()
+
+	#m: cleanUp: clean the resources that cannot be automatically cleared by python
+	def cleanUp(self):
+		logging.log(1, "Trace: Game.cleanUp")
+		graphx.cleanUp()
