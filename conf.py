@@ -18,13 +18,19 @@ conf = {
 		'screen_base_color': (0, 0, 0),
 		'video_player': {
 			'max_fps': 60
-		}
+		},
+		'font': 'None'
 	},
 	'resources': {
 		'intro_video': 'resources/intro.mpg',
+		'font': {
+			'default': None,
+			'default_size': 16
+		},
 		'menu': {
 			'default_menu_item': 'resources/menu/default_menu_item.png',
-			'default_container': 'resources/menu/default_container.png'
+			'default_container': 'resources/menu/default_container.png',
+			'default_label_background': 'resources/menu/default_label_background.png'
 		},
 		'language': 'fr'
 	}

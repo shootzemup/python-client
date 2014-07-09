@@ -14,10 +14,16 @@ class MenuItem(object):
 	A menu item uses a behaviour to update its internal data, a model to
 	store its internal data and a view to display it.
 	"""
-	def __init__(self, imageLink=None, initPos=(0,0), initSize=(1, 1), 
-				absolute=False, itemName="Unamed"):
+	def __init__(self, menuItemModel=None, menuItemBehaviour=None, 
+				menuItemView=None, imageLink=None, initPos=(0,0), 
+				initSize=(1, 1), absolute=False, itemName="Unamed"):
 		"""
 		Initialize the menu item
+		menuItemModel -- a custom model for this menu item. Note that if
+						 this parameter is provided, all the other (except
+						 menuItemBehaviour and menuItemView) will be ignored
+		menuItemBehaviour -- a custom behaviour for this menu item
+		menuItemView -- a custom view for this menu item
 		imageLink -- link to the image corresponding to this menu item
 		initPos -- the initial position of the item to set as the center of the 
 				   surface. If `absolute` is `False` (default), the
@@ -33,12 +39,21 @@ class MenuItem(object):
 		super(MenuItem, self).__init__()
 		logging.log(1, "Trace: MenuItem.__init__(%s, %s, %s, %s)"
 						% (imageLink, initPos, initSize, absolute))
-		if imageLink is None:
-			imageLink = conf['resources']['menu']['default_menu_item']
-		self._model = MenuItemModel(imageLink, initPos, initSize, absolute, 
-									itemName)
-		self._behaviour = MenuItemBehaviour(self._model)
-		self._view = MenuItemView(self._model)
+		if menuItemModel is None:
+			self._model = MenuItemModel(imageLink, initPos, initSize, absolute, 
+										itemName)
+		else:
+			self._model = menuItemModel
+
+		if menuItemBehaviour is None:
+			self._behaviour = MenuItemBehaviour(self._model)
+		else:
+			self._behaviour = menuItemBehaviour
+
+		if menuItemView is None:
+			self._view = MenuItemView(self._model)
+		else:
+			self._view = menuItemView
 
 	def update(self, stateManager):
 		"""

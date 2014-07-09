@@ -3,26 +3,39 @@
 import logging
 import pygame
 
+from conf import conf
+
 
 class MenuItemModel(object):
 	"""
         Handle the data of a default menu item
 	"""
-	def __init__(self, imageLink, initPos, initSize, absolute, name):
+	def __init__(self, image=None, initPos=(0, 0), initSize=(1, 1), 
+				 absolute=False, itemName="Unamed"):
 		"""
 		Initialize the model of the menu item
+		image -- if string, the link to the image to be used as background for this 
+				     menu item, otherwise a Surface object is expected
 		initPos -- the initial position of the item
 		initSize -- the initial size of the item.
 		absolute -- if set to `True`, the position and the size will be used as
 					stated. If no, the size and the position will be computed
 					from the size of the parent at render time
+		name -- the name of the menu item
 		"""
 		super(MenuItemModel, self).__init__()
+		logging.log(1, "Trace: MenuItemModel.__init__(%s, %s, %s, %s, %s)"
+						% (image, initPos, initSize, absolute, itemName))
+		if image is None:
+			image = conf['resources']['menu']['default_menu_item']
 		self._position = initPos
 		self._size = initSize
 		self._absolute = absolute
-		self._surface = pygame.image.load(imageLink)
-		self._itemName = name
+		if type(image) is str:
+			self._surface = pygame.image.load(image)
+		else:
+			self._surface = image
+		self._itemName = itemName
 		self._rect = self._surface.get_rect()
 
 	@property

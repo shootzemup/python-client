@@ -15,8 +15,8 @@ class MenuItemView(object):
 		super(MenuItemView, self).__init__()
 		self._model = model
 
-	def computeRealSize(self, parentSize):
-		logging.log(1, "Trace: MenuItemView.computeRealSize(%s)" 
+	def _computeRealSize(self, parentSize):
+		logging.log(1, "Trace: MenuItemView._computeRealSize(%s)" 
 						% str(parentSize))
 		logging.debug("%s, realSize = %s * %s" 
 					  % (self._model.itemName,
@@ -35,8 +35,8 @@ class MenuItemView(object):
 				self._model.surface, self._model.realSize)
 
 
-	def computeRealPos(self, parentPos, parentSize):
-		logging.log(1, "Trace: MenuItemView.computeRealPos(%s, %s)" % 
+	def _computeRealPos(self, parentPos, parentSize):
+		logging.log(1, "Trace: MenuItemView._computeRealPos(%s, %s)" % 
 					(parentPos, parentSize))
 		logging.debug("%s realPos = %s + %s * %s - %s / 2" 
 					  	% (self._model.itemName, str(parentPos), 
@@ -57,15 +57,16 @@ class MenuItemView(object):
 	def render(self, interpolation, parentPos, parentSize):
 		logging.log(1, "Trace: MenuItemView.render(%.5f, %s, %s)" % 
 					(interpolation, parentPos, parentSize))
+		logging.debug("Rendering using model: %s" % self._model)
 		if self._model.absolute:  # the model contains the real positions
 			# position is the position of the center pixel 
 			# size is a multiple of pixels
-			self.computeRealSize((1, 1))
-			self.computeRealPos((0, 0), (1, 1))
+			self._computeRealSize((1, 1))
+			self._computeRealPos((0, 0), (1, 1))
 		else:  # the model contains relative positions/size
 			# compute size first as it will be used bu the position computation
-			self.computeRealSize(parentSize)
-			self.computeRealPos(parentPos, parentSize)
+			self._computeRealSize(parentSize)
+			self._computeRealPos(parentPos, parentSize)
 		graphx.draw(self._model.surface, self._model.rect)
 
 

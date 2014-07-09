@@ -13,6 +13,7 @@ class MenuItemBehaviour(object):
 		model -- the model of the menu item
 		"""
 		super(MenuItemBehaviour, self).__init__()
+		logging.log(1, "Trace: MenuItemBehaviour.__init__(%s)" % model)
 		self._model = model
 	
 	def update(self, stateManager):

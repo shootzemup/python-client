@@ -85,7 +85,7 @@ class Game(object):
 	def getAverageUpdatingTime(self):
 		return not self._nb_updates or self._updating_time / self._nb_updates
 	def getAverageFPS(self):
-		return not self._nb_renders or (time.time() - self._init_time) / self._nb_renders
+		return not self._nb_renders or 1.0 / ((time.time() - self._init_time) / self._nb_renders)
 
 	#m: run: Run the main game loop.
 	#c: It updates the game with a fixed time step but can update multiple time
@@ -99,7 +99,9 @@ class Game(object):
 		logging.log(1, "Trace: Game.run()")
 		global DONE
 		previous = time.time()
-		lag = 0
+		#c: initializing lag to one update time step allow to force 
+		#c: one update before any render call
+		lag = conf['game_engine']['update_time_step']
 		while not DONE:
 			#c: compute the elapsed time since previous rendering
 			current = time.time()

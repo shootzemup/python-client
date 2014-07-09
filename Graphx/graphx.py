@@ -29,8 +29,8 @@ class Graphx(object):
 		self._screen_size = conf['graphx']['screen_size']
 		self._screen = pygame.display.set_mode(self._screen_size)
 		self._video_player = VideoPlayer()
+		pygame.font.init()
 
-		
 	def playVideo(self, link, on_video_end):
 		self._video_player.play(link, on_video_end)
 
@@ -54,6 +54,7 @@ class Graphx(object):
 		return self._screen_size
 
 	def cleanUp(self):
+		pygame.freetype.quit()
 		pass
 
 draw = singletonize(Graphx.draw)

@@ -19,7 +19,7 @@ class Container(MenuItem):
 		# default the imageLink parameter
 		if imageLink is None:
 			imageLink = conf['resources']['menu']['default_container']
-		super(Container, self).__init__(imageLink, **kwargs)
+		super(Container, self).__init__(imageLink=imageLink, **kwargs)
 		self._menuItems = []
 		logging.log(1, "Trace: Container.__init__(%s, %s)" 
 						% (imageLink, kwargs))
