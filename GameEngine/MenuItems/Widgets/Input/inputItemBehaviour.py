@@ -43,7 +43,11 @@ class InputItemBehaviour(MenuItemBehaviour):
 		self._model.textChanged = False
 		myFont = Font(conf['resources']['font']['default'],
 					  conf['resources']['font']['default_size'])
-		self._model.textSurface = myFont.render(text, True, color or self._model.color)
+		fontSurface = myFont.render(text, True, color or self._model.color)
+		self._model.textSurface = pygame.transform.scale(
+			fontSurface,
+			(fontSurface.get_rect().size[0] * (self._model.realSize[1] - 2 *  conf['resources']['menu']['input']['margins'][1]) / fontSurface.get_rect().size[1],
+			 self._model.realSize[1] - 2 *  conf['resources']['menu']['input']['margins'][1]))
 
 	def update(self, stateManager, parentPos, parentSize):
 		super(InputItemBehaviour, self).update(stateManager, parentPos, parentSize)		

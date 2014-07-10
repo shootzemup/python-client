@@ -13,7 +13,8 @@ class InputItemModel(MenuItemModel):
 	Represents the model of an input, which is a specialized menu item
 	where the user can type some text
 	"""
-	def __init__(self, defaultText=None, placeHolder="", color=(255, 255, 255), **kwargs):
+	def __init__(self, defaultText=None, placeHolder="", 
+				 color=(255, 255, 255), **kwargs):
 		"""
 		Initialize a new model for an input item
 		defaultText -- the text to be displayed, that the user can edit
@@ -37,6 +38,7 @@ class InputItemModel(MenuItemModel):
 		self._defaultText = defaultText
 		self._placeHolder = placeHolder
 		self._hasFocus = True
+		self._textSurface = None
 		self._textSurfaceRect = None
 		self._text = defaultText if defaultText else placeHolder
 		self._color = color
@@ -65,16 +67,6 @@ class InputItemModel(MenuItemModel):
 		self._textChanged = True
 		self._text = value
 	
-	# override the getter/setter of the _surface member to make a fresh copy
-	# when it gets resized
-	@property
-	def surface(self):
-	    return self._surface
-	@surface.setter
-	def surface(self, value):
-	    self._surface = value
-	    self._rect = self._surface.get_rect()
-
 	@property
 	def textSurface(self):
 	    return self._textSurface if self._textSurface else self.surface
@@ -94,3 +86,6 @@ class InputItemModel(MenuItemModel):
 	def color(self, value):
 	    self._color = value
 	
+	def resizeSurface(self, newSize):
+		self.surface =  pygame.transform.scale(
+			self._surface, newSize)

@@ -36,7 +36,8 @@ conf = {
 			'default_container': 'resources/menu/default_container.png',
 			'default_label_background': 'resources/menu/default_label_background.png',
 			'input': {
-				'default_background': 'resources/menu/input/default_background.png'
+				'default_background': 'resources/menu/input/default_background.png',
+				'margins': (5, 2),  # x, y
 			}
 		
 		},
