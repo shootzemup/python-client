@@ -27,7 +27,7 @@ class Game(object):
 		eventsManager.registerEvent(
 			'Game.onKeyQuit', (pygame.KEYUP, pygame.K_ESCAPE), self.onQuit)
 		eventsManager.registerEvent(
-			'Game.onWindowExit', (pygame.QUIT, None), self.onQuit)
+			'Game.onWindowExit', (pygame.QUIT), self.onQuit)
 		eventsManager.registerCombination(
 			'Game.combinationTest', [pygame.K_a, pygame.K_b, pygame.K_c], [], 
 			self.onCombinationTest)

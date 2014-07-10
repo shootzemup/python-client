@@ -27,6 +27,9 @@ class EventsManager(object):
 	"""
 	def __init__(self):
 		super(EventsManager, self).__init__()
+		pygame.key.set_repeat(
+			conf['events']['key_repeat_delay'],
+			conf['events']['key_repeat_interval'])
 		logging.log(1, "Trace: EventsManager.__init__()")
 		# registered allow to get all the callbacks related to an event
 		self._registered = {}
@@ -50,7 +53,7 @@ class EventsManager(object):
 		for cb_name in self._registered[event]:
 			logging.debug("Event callback '%s' called." % cb_name)
 			if event_value:
-				self._registered[event][cb_name](event_value)
+				self._registered[event][cb_name](*event_value)
 			else:
 				self._registered[event][cb_name]()
 
@@ -64,7 +67,7 @@ class EventsManager(object):
 		elif event.type == MOUSEMOTION:
 			reg_ev = (event.type, event.pos)
 		elif event.type == QUIT:
-			reg_ev = (event.type, None)
+			reg_ev = (event.type)
 		elif not event.type in self._ignored_events:
 			logging.warning("Unexpected event: %s" % event)
 			return;
@@ -80,13 +83,12 @@ class EventsManager(object):
 		# callback
 		if (event.type) in self._registered:
 			if event.type == KEYDOWN or event.type == KEYUP:
-				self._call_callbacks(self, (event.type), event.key)
+				from pprint import pformat
+				self._call_callbacks((event.type), (event.key, event.unicode))
 			elif event.type == MOUSEBUTTONDOWN or event.type == MOUSEBUTTONUP:
-				self._call_callbacks(self, (event.type), event.button)
+				self._call_callbacks((event.type), (event.button, event.pos))
 			elif event.type == MOUSEMOTION:
-				self._call_callbacks(self, (event.type), event.pos)
-			elif event.type == QUIT:
-				self._call_callbacks(self, (event.type), None)
+				self._call_callbacks((event.type), event.pos)
 			elif not event.type in self._ignored_events:
 				logging.warning("Unexpected event: %s" % event)
 
@@ -168,8 +170,12 @@ class EventsManager(object):
 				`Game.onQuit`, etc...
 		event -- the tuple (type, value) that correspond to the event that will
 				 make the callback to be called. 
-				 Note: If the value is not specified, if will be given to the 
-				 callback
+				 Note: If the value is not specified, the value when the event 
+				 is fired will be given to the callback. ie: the key pressed
+				 when a KEYDOWN/KEYUP event is fired, the mouse position when
+				 a MOUSEMOTION event is fired ans the 
+				 (mouse buttons, mouse position) when a MOUSEBUTTONUP/MOUSEBUTTONDOWN
+				 event is fired.
 		callback -- the callback that will be called when the given event is
 					fired
 		"""
@@ -189,8 +195,10 @@ class EventsManager(object):
 		#retrieve the event from the name, then delete the callback
 		# that is registered under this name
 		logging.log(1, "Trace: EventsManager.registerEvent(%s)" % name)
-		logging.debug("Unregistering event '%s' from list: %s" % (name, self._names))
-		logging.debug("Unregistering event '%s' from list: %s" % (name, self._registered[self._names[name]]))
+		logging.debug("Unregistering event '%s' from list: %s" 
+						% (name, self._names))
+		logging.debug("Unregistering event '%s' from list: %s" 
+						% (name, self._registered[self._names[name]]))
 		# add the event to the list of events waiting to be deleted
 		if not name in self._events_to_delete:  # prevent duplacates
 			self._events_to_delete.append(name)
@@ -198,12 +206,12 @@ class EventsManager(object):
 	def listRegisteredEvents(self):
 		logging.info(">>> Registered events: ")
 		for i, name in enumerate(self._names):
-			logging.info(" %d. %s -- %s: %s" 
+			logging.info(" %d. %s -- %s -- %s" 
 						 % (i, name, i18n('events/names/' + name),
 							i18n('events/descriptions/' + name)))
 		logging.info(">>> Registered combinations: ")
 		for i, name in enumerate(self._registered_combinations):
-			logging.info(" %d. %s -- %s: %s" 
+			logging.info(" %d. %s -- %s -- %s" 
 						 % (i, name, i18n('events/names/' + name),
 						 	i18n('events/descriptions/' + name)))
 

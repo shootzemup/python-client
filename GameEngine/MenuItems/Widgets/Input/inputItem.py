@@ -2,13 +2,16 @@
 
 import logging
 
-from labelItemModel import LabelItemModel
+from inputItemModel import InputItemModel
+from inputItemBehaviour import InputItemBehaviour
+from inputItemView import InputItemView
 from GameEngine.MenuItems.menuItem import MenuItem
+# from GameEngine.MenuItems.Widgets.Label.labelItem import LabelItem
 
 
-class LabelItem(MenuItem):
+class InputItem(MenuItem):
 	"""Represent a menu item that display a string"""
-	def __init__(self, text, **kwargs):
+	def __init__(self, defaultText, placeHolder, **kwargs):
 		"""
 		Initialize a new labelItem
 		Note: you can initialize a label item by simply givin a labelModel to
@@ -27,6 +30,11 @@ class LabelItem(MenuItem):
 		itemName -- used only for debugging identification
 		"""
 		# a label item is made of a label model, view and behaviour
-		model = LabelItemModel(text, **kwargs)
-		super(LabelItem, self).__init__(menuItemModel=model)
-		logging.log(1, "Trace: LabelItem.__init__(%s, %s)" % (text, kwargs))
+		model = InputItemModel(defaultText, placeHolder, **kwargs)
+		behaviour = InputItemBehaviour(model)
+		view = InputItemView(model)
+		super(InputItem, self).__init__(
+			menuItemModel=model, menuItemBehaviour=behaviour,
+			menuItemView=view)
+		logging.log(1, "Trace: InputItem.__init__(%s, %s, %s)" 
+						% (defaultText, placeHolder, kwargs))

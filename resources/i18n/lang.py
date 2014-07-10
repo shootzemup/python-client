@@ -20,5 +20,10 @@ def i18n(label):
 	arb = label.split('/')
 	translated = labels[conf['resources']['language']]
 	for next in arb:
-		translated = translated[next]
+		if next in translated:
+			translated = translated[next]
+		else:
+			translated = ("UNTRANSLATED: lang=%s: label=%s" 
+					% (conf['resources']['language'], label))
+			break
 	return translated

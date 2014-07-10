@@ -21,16 +21,24 @@ conf = {
 		},
 		'font': 'None'
 	},
+	'events': {
+		'key_repeat_delay': 500,
+		'key_repeat_interval': 20
+	},
 	'resources': {
 		'intro_video': 'resources/intro.mpg',
 		'font': {
 			'default': None,
-			'default_size': 16
+			'default_size': 32
 		},
 		'menu': {
 			'default_menu_item': 'resources/menu/default_menu_item.png',
 			'default_container': 'resources/menu/default_container.png',
-			'default_label_background': 'resources/menu/default_label_background.png'
+			'default_label_background': 'resources/menu/default_label_background.png',
+			'input': {
+				'default_background': 'resources/menu/input/default_background.png'
+			}
+		
 		},
 		'language': 'fr'
 	}

@@ -92,10 +92,8 @@ class MenuItemModel(object):
 	@surface.setter
 	def surface(self, value):
 	    self._surface = value
-	
-	
-	
+	    self._rect = self._surface.get_rect()
 
-	
-	
-
+	def resizeSurface(self, newSize):
+		self.surface =  pygame.transform.scale(
+			self._surface, newSize)

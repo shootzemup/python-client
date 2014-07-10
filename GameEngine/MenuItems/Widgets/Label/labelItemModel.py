@@ -13,7 +13,7 @@ class LabelItemModel(MenuItemModel):
 	"""
 	Represents the model of a label
 	"""
-	def __init__(self, text, **kwargs):
+	def __init__(self, text="", color=(0, 0, 0), **kwargs):
 		"""
 		Initialize a new model for a label item
 		text -- the text to be displayed
@@ -28,14 +28,17 @@ class LabelItemModel(MenuItemModel):
 					from the size of the parent at render time
 		itemName -- used only for debugging identification
 		"""
-		image = self._write(text)
-		super(LabelItemModel, self).__init__(image=image, **kwargs)
+		super(LabelItemModel, self).__init__(**kwargs)
+		self.surface = self.write(text, color)
+		logging.log(1, "Trace: LabelItemModel.__init__(%s, %s, %s)"
+						% (text, color, kwargs))
 		self._text = text
+		self._color = color
 
-	def _write(self, text):
+	def write(self, text, color=None):
 		myFont = Font(conf['resources']['font']['default'],
 					  conf['resources']['font']['default_size'])
-		surface = myFont.render(text, True, (0, 0, 0))
+		surface = myFont.render(text, True, color or self._color)
 		return surface
 		
 	@property
