@@ -29,7 +29,7 @@ conf = {
 		'intro_video': 'resources/intro.mpg',
 		'font': {
 			'default': None,
-			'default_size': 32
+			'default_precision': 32
 		},
 		'menu': {
 			'default_menu_item': 'resources/menu/default_menu_item.png',

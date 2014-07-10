@@ -42,7 +42,7 @@ class InputItemBehaviour(MenuItemBehaviour):
 	def write(self, text, color=None):
 		self._model.textChanged = False
 		myFont = Font(conf['resources']['font']['default'],
-					  conf['resources']['font']['default_size'])
+					  self._model.precision)
 		fontSurface = myFont.render(text, True, color or self._model.color)
 		self._model.textSurface = pygame.transform.scale(
 			fontSurface,
