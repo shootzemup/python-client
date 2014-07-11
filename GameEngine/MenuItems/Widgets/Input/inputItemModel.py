@@ -30,7 +30,7 @@ class InputItemModel(MenuItemModel):
 						% (defaultText, placeHolder, kwargs))
 		self._defaultText = defaultText
 		self._placeHolder = placeHolder
-		self._hasFocus = True
+		self._hasFocus = False
 		self._textSurface = None
 		self._textSurfaceRect = None
 		self._text = defaultText if defaultText else ''

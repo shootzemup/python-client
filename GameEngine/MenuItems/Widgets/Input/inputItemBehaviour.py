@@ -21,21 +21,32 @@ class InputItemBehaviour(MenuItemBehaviour):
 		"""
 		super(InputItemBehaviour, self).__init__(model)
 		logging.log(1, "Trace: InputItemBehaviour(%s)" % model)
+		# self._register_events()
 		eventsManager.registerEvent(
 			'onInputClick-' + self._model.itemName, (pygame.MOUSEBUTTONDOWN),
 			 self.onInputClick)
+
+	def _register_events(self):
+		logging.info("Registering events for item %s" % self._model.itemName)
 		eventsManager.registerEvent(
 			'onKeyPressed-' + self._model.itemName, (pygame.KEYDOWN),
 			self.onKeyPressed)
+
+	def _unregister_events(self):
+		eventsManager.unregisterEvent(
+			'onKeyPressed-' + self._model.itemName)
 
 	def onInputClick(self, button, pos):
 		logging.info("InputItem %s received event: (%s, %s)"
 					 % (self._model.itemName, button, pos))
 		if button == 1 or button == 3:
 			if self._model.intersect(pos):
-				self._model.focus()
-			else:
+				if not self._model.hasFocus:
+					self._model.focus()
+					self._register_events()
+			elif self._model.hasFocus:
 				self._model.unfocus()
+				self._unregister_events()
 
 
 	def onKeyPressed(self, key, ascii):
