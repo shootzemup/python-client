@@ -49,9 +49,13 @@ class InputItemModel(MenuItemModel):
 	@property
 	def hasFocus(self):
 	    return self._hasFocus
-	@hasFocus.setter
-	def hasFocus(self, value):
-	    self._hasFocus = value
+	
+	def focus(self):
+		logging.info("InputItem %s - focus" % self.itemName)
+		self._hasFocus = True
+	def unfocus(self):
+		logging.info("InputItem %s - unfocus" % self.itemName)
+		self._hasFocus = False
 
 	@property
 	def textChanged(self):

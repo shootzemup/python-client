@@ -29,10 +29,18 @@ class InputItemBehaviour(MenuItemBehaviour):
 			self.onKeyPressed)
 
 	def onInputClick(self, button, pos):
-		logging.info("InputItem received event: (%s, %s)" % (button, pos))
+		logging.info("InputItem %s received event: (%s, %s)"
+					 % (self._model.itemName, button, pos))
+		if button == 1 or button == 3:
+			if self._model.intersect(pos):
+				self._model.focus()
+			else:
+				self._model.unfocus()
+
 
 	def onKeyPressed(self, key, ascii):
-		logging.info("InputItem received event: %s" % key)
+		logging.info("InputItem %s received event: %s" 
+					 % (self._model.itemName, key))
 		if self._model.hasFocus:
 			if key >= 32:
 				self._model.text += ascii

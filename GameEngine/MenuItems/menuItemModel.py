@@ -75,11 +75,22 @@ class MenuItemModel(object):
 	    self._rect.center = value
 
 	@property
+	def realPositionTopLeft(self):
+	    return self._rect.topleft
+	@realPositionTopLeft.setter
+	def realPositionTopLeft(self, value):
+	    self._rect.topleft = value
+	
+
+	@property
 	def realSize(self):
 		return self._rect.size
 	@realSize.setter
 	def realSize(self, value):
 		self._rect.size = value
+
+	def intersect(self, point):
+		return self._rect.collidepoint(point)
 	
 
 	@property
