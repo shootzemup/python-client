@@ -25,7 +25,14 @@ class Container(MenuItem):
 						% (imageLink, kwargs))
 
 	def addMenuItem(self, item):
-		self._menuItems.append(item)
+		"""
+		Add a menu item to this container.
+		item -- either a MenuItem or a list of MenuItems
+		"""
+		if type(item) is list:
+			self._menuItems += item
+		else:
+			self._menuItems.append(item)
 
 	def update(self, stateManager, parentPos=None, parentSize=None):
 		logging.log(1, "Trace: Container.update(%s, %s, %s)"

@@ -18,10 +18,10 @@ class AuthentState(State):
 		self._page = Container(initSize=(1.0, 1.0), initPos=(0, 0), 
 							   itemName="Container")
 		menuItem = [InputItem(defaultText="i test", placeHolder="placeholder", 
-							initSize=(0.1, 0.01),
+							initSize=(0.25, 0.025),
 							initPos=(-1 + 0.2 * x % 10, -1 + 0.2 * x / 10), 
-							itemName="MenuItem-" + x)
-					 for x in range(100)
+							itemName="MenuItem-%d" % x) \
+					 for x in range(1)]
 		self._page.addMenuItem(menuItem)
 
 	def update(self, stateManager):
