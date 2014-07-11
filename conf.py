@@ -22,8 +22,8 @@ conf = {
 		'font': 'None'
 	},
 	'events': {
-		'key_repeat_delay': 500,
-		'key_repeat_interval': 20
+		'key_repeat_delay': 200,
+		'key_repeat_interval': 1
 	},
 	'resources': {
 		'intro_video': 'resources/intro.mpg',

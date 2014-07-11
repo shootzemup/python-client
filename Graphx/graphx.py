@@ -42,10 +42,12 @@ class Graphx(object):
 		pygame.display.flip()
 		self._screen.fill(conf['graphx']['screen_base_color'])
 
-	def draw(self, surface, position=(0, 0)):
+	def draw(self, surface, position=(0, 0), clipPos=None, clipSize=None):
 		logging.log(1, "Trace: Graphx.draw(%s, %s)" % (surface, position))
-		self._screen.blit(surface, position)
-
+		area = None
+		if clipPos is not None and clipSize is not None:
+			area = pygame.Rect(clipPos, clipSize)
+		self._screen.blit(surface, position, area)
 
 	def getScreen(self):
 		return self._screen

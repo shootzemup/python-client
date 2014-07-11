@@ -48,6 +48,7 @@ class InputItemBehaviour(MenuItemBehaviour):
 			myFont = Font(conf['resources']['font']['default'],
 						  self._model.precision)
 		fontSurface = myFont.render(text, True, color or self._model.color)
+		# resize to fit the size of the background. 
 		self._model.textSurface = pygame.transform.scale(
 			fontSurface,
 			(fontSurface.get_rect().size[0] * (self._model.realSize[1] - 2 *  conf['resources']['menu']['input']['margins'][1]) / fontSurface.get_rect().size[1],
