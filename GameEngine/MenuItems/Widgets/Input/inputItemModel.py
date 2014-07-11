@@ -13,7 +13,7 @@ class InputItemModel(MenuItemModel):
 	Represents the model of an input, which is a specialized menu item
 	where the user can type some text
 	"""
-	def __init__(self, defaultText=None, placeHolder="", precision=None
+	def __init__(self, defaultText=None, placeHolder="", precision=None,
 				 color=(255, 255, 255), **kwargs):
 		"""
 		Initialize a new model for an input item
@@ -33,10 +33,11 @@ class InputItemModel(MenuItemModel):
 		self._hasFocus = True
 		self._textSurface = None
 		self._textSurfaceRect = None
-		self._text = defaultText if defaultText else placeHolder
+		self._text = defaultText if defaultText else ''
 		self._color = color
 		self._textChanged = True
-		self._precision = precision or Conf['resources']['font']['default_precision']
+		self._precision = precision or conf['resources']['font']['default_precision']
+		self._empty = len(self._text) == 0
 		
 	@property
 	def precision(self):
@@ -67,6 +68,7 @@ class InputItemModel(MenuItemModel):
 		logging.info("Text changed to: %s" % self._text)
 		self._textChanged = True
 		self._text = value
+		self._empty = len(self._text) == 0
 	
 	@property
 	def textSurface(self):
@@ -90,3 +92,11 @@ class InputItemModel(MenuItemModel):
 	def resizeSurface(self, newSize):
 		self.surface =  pygame.transform.scale(
 			self._surface, newSize)
+
+	@property
+	def empty(self):
+	    return self._empty
+
+	@property
+	def placeHolder(self):
+	    return self._placeHolder

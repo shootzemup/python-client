@@ -28,7 +28,9 @@ conf = {
 	'resources': {
 		'intro_video': 'resources/intro.mpg',
 		'font': {
-			'default': None,
+			'default': 'resources/font/amaranth/Amaranth-Regular.ttf',
+			'system': 'bitstreamverasans',
+			'use_system': True,
 			'default_precision': 32
 		},
 		'menu': {

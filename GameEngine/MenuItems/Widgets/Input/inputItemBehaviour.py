@@ -3,7 +3,7 @@
 import logging
 
 import pygame
-from pygame.font import Font
+from pygame.font import Font, SysFont
 
 from conf import conf
 from GameEngine.MenuItems.menuItemBehaviour import MenuItemBehaviour
@@ -41,8 +41,12 @@ class InputItemBehaviour(MenuItemBehaviour):
 
 	def write(self, text, color=None):
 		self._model.textChanged = False
-		myFont = Font(conf['resources']['font']['default'],
-					  self._model.precision)
+		if conf['resources']['font']['use_system']:
+			myFont = SysFont(conf['resources']['font']['system'], 
+							self._model.precision)
+		else:
+			myFont = Font(conf['resources']['font']['default'],
+						  self._model.precision)
 		fontSurface = myFont.render(text, True, color or self._model.color)
 		self._model.textSurface = pygame.transform.scale(
 			fontSurface,
@@ -55,4 +59,7 @@ class InputItemBehaviour(MenuItemBehaviour):
 					(stateManager, parentPos, parentSize))
 		logging.debug("Updating using model: %s", self._model)
 		if self._model.textChanged:
-			self.write(self._model.text)
+			self.write(
+				self._model.text if not self._model.empty else self._model.placeHolder,
+				self._model.color if not self._model.empty else 
+					(self._model.color[0] / 2, self._model.color[1] / 2, self._model.color[2] / 2))

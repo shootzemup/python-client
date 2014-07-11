@@ -17,8 +17,9 @@ class AuthentState(State):
 		logging.log(1, "Trace: AuthentState.__init__()")
 		self._page = Container(initSize=(1.0, 1.0), initPos=(0, 0), 
 							   itemName="Container")
-		menuItem = InputItem("i test", "placeholder", initSize=(0.25, 0.1),
-							precision=128, initPos=(0, 0), itemName="MenuItem")
+		menuItem = InputItem(defaultText="i test", placeHolder="placeholder", 
+							initSize=(0.25, 0.025),
+							initPos=(0, 0), itemName="MenuItem")
 		self._page.addMenuItem(menuItem)
 
 	def update(self, stateManager):
