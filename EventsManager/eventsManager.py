@@ -30,7 +30,6 @@ class EventsManager(object):
 		pygame.key.set_repeat(
 			conf['events']['key_repeat_delay'],
 			conf['events']['key_repeat_interval'])
-		logging.log(1, "Trace: EventsManager.__init__()")
 		# registered allow to get all the callbacks related to an event
 		self._registered = {}
 		# names allow to get an event from the name
@@ -48,8 +47,6 @@ class EventsManager(object):
 		self._events_to_delete = []
 
 	def _call_callbacks(self, event, event_value=None):
-		logging.log(1, "Trace: EventsManager._call_callbacks(%s, %s)"
-						% (event, event_value))
 		for cb_name in self._registered[event]:
 			logging.debug("Event callback '%s' called." % cb_name)
 			if event_value:
@@ -58,7 +55,6 @@ class EventsManager(object):
 				self._registered[event][cb_name]()
 
 	def handleEvent(self, event):
-		logging.log(1, "Trace: EventsManager.handleEvent(%s)" % event)
 		# construct the event if it is valid
 		if event.type == KEYDOWN or event.type == KEYUP:
 			reg_ev = (event.type, event.key)
@@ -93,8 +89,6 @@ class EventsManager(object):
 				logging.warning("Unexpected event: %s" % event)
 
 	def handlePressed(self, kbs, ms):
-		logging.log(1, "Trace: EventsManager.handlePressed(%s, %s)" 
-						% (kbs, ms))
 		# allow to check key combination, that can be used for shortcuts
 		for name in self._registered_combinations:
 			combin = self._registered_combinations[name]
@@ -114,7 +108,6 @@ class EventsManager(object):
 				combin['callback']()
 
 	def update(self):
-		logging.log(1, "Trace: EventsManager.update()")
 		# if events or combinations are waiting to be deleted, do it now.
 		# (note: this function is called once per frame)
 		self._unregister_waiting_queue()
@@ -143,8 +136,6 @@ class EventsManager(object):
 		callback -- callback to be called when both listed keycodes and 
 					mousebuttons are pressed at the same time
 		"""
-		logging.log(1, "Trace: EventsManager.registerCombination(%s, %s, %s, %s)" 
-						% (name, keycodes, mousebuttons, callback))
 		logging.debug("Registering combination %s on callback: %s"
 						% (name, callback))
 		self._registered_combinations[name] = {
@@ -154,7 +145,6 @@ class EventsManager(object):
 		}
 
 	def unregisterCombination(self, name):
-		logging.log(1, "Trace: EventsManager.unregisterCombination(%s)" % name)
 		logging.debug("Unregistering event '%s' from list: %s"
 						% (name, self._registered_combinations))
 		# add the combination to the list of combinations waiting to be deleted
@@ -179,8 +169,6 @@ class EventsManager(object):
 		callback -- the callback that will be called when the given event is
 					fired
 		"""
-		logging.log(1, "Trace: EventsManager.registerEvent(%s, %s, %s)" 
-						% (name, event, callback))
 		logging.debug("Registering event %s on callback: %s" % (name, callback))
 		# create or add the the dict of callbacks 
 		# related to the event
@@ -194,7 +182,6 @@ class EventsManager(object):
 	def unregisterEvent(self, name):
 		#retrieve the event from the name, then delete the callback
 		# that is registered under this name
-		logging.log(1, "Trace: EventsManager.registerEvent(%s)" % name)
 		logging.debug("Unregistering event '%s' from list: %s" 
 						% (name, self._names))
 		logging.debug("Unregistering event '%s' from list: %s" 

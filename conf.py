@@ -10,11 +10,11 @@ conf = {
 		'simulate_hardware_lag': 0
 	},
 	'logging': {
-		'log_file_level': 0,  #logging.DEBUG
-		'log_console_level': 0  #logging.DEBUG
+		'log_file_level': logging.INFO,
+		'log_console_level': 0
 	},
 	'graphx': {
-		'screen_size': (1000, 1000),
+		'screen_size': (1280, 800),
 		'screen_base_color': (0, 0, 0),
 		'video_player': {
 			'max_fps': 60

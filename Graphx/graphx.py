@@ -25,7 +25,6 @@ class Graphx(object):
 	"""Represent the graphx engine"""
 	def __init__(self):
 		super(Graphx, self).__init__()
-		logging.log(1, "Trace: Graphx.__init__()")
 		self._screen_size = conf['graphx']['screen_size']
 		self._screen = pygame.display.set_mode(self._screen_size)
 		self._video_player = VideoPlayer()
@@ -37,13 +36,11 @@ class Graphx(object):
 	# Flip the screen and erase the drawing surface.
 	# This function should be called once after all the game rendering
 	def update(self):
-		logging.log(1, "Trace: Graphx.update()")
 		self._video_player.render()
 		pygame.display.flip()
 		self._screen.fill(conf['graphx']['screen_base_color'])
 
 	def draw(self, surface, position=(0, 0), clipPos=None, clipSize=None):
-		logging.log(1, "Trace: Graphx.draw(%s, %s)" % (surface, position))
 		area = None
 		if clipPos is not None and clipSize is not None:
 			area = pygame.Rect(clipPos, clipSize)

@@ -25,9 +25,8 @@ class IntroState(State):
 		self._state_manager.changeState(AuthentState.getInstance())
 
 	def update(self, stateManager):
-		logging.log(1, "Trace: IntroState.update(%s)" % stateManager)
 		self._state_manager = stateManager
 
 	def render(self, interpolation):
-		logging.log(1, "Trace: IntroState.render(%.5f)" % interpolation)
+		pass
 		

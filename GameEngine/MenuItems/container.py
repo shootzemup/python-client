@@ -35,8 +35,6 @@ class Container(MenuItem):
 			self._menuItems.append(item)
 
 	def update(self, stateManager, parentPos=None, parentSize=None):
-		logging.log(1, "Trace: Container.update(%s, %s, %s)"
-						% (stateManager, parentPos, parentSize))
 		# the first container of the tree has the screen as a parent
 		if parentSize is None:
 			parentSize = graphx.getScreenSize()
@@ -51,9 +49,6 @@ class Container(MenuItem):
 						self._model.realSize)
 
 	def render(self, interpolation):
-		logging.log(1, "Trace: Container.render(%.5f)" 
-						% (interpolation))
-
 		# call mother class rendering function
 		MenuItem.render(self, interpolation)
 		# successively render all the children elements

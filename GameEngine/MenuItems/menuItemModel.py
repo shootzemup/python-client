@@ -106,5 +106,6 @@ class MenuItemModel(object):
 	    self._rect = self._surface.get_rect()
 
 	def resizeSurface(self, newSize):
+		logging.debug("Surface resized")
 		self.surface =  pygame.transform.scale(
 			self._surface, newSize)

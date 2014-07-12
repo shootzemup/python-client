@@ -74,10 +74,7 @@ class InputItemBehaviour(MenuItemBehaviour):
 			 self._model.realSize[1] - 2 *  conf['resources']['menu']['input']['margins'][1]))
 
 	def update(self, stateManager, parentPos, parentSize):
-		super(InputItemBehaviour, self).update(stateManager, parentPos, parentSize)		
-		logging.log(1, "Trace: MenuItemBehaviour.update(%s, %s, %s)" % 
-					(stateManager, parentPos, parentSize))
-		logging.debug("Updating using model: %s", self._model)
+		super(InputItemBehaviour, self).update(stateManager, parentPos, parentSize)
 		if self._model.textChanged:
 			self.write(
 				self._model.text if not self._model.empty else self._model.placeHolder,

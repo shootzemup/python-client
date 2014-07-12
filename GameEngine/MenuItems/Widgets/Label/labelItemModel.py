@@ -37,7 +37,7 @@ class LabelItemModel(MenuItemModel):
 
 	def write(self, text, color=None):
 		myFont = Font(conf['resources']['font']['default'],
-					  conf['resources']['font']['default_size'])
+					  conf['resources']['font']['default_precision'])
 		surface = myFont.render(text, True, color or self._color)
 		return surface
 		

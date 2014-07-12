@@ -17,9 +17,6 @@ class InputItemView(MenuItemView):
 	"""
 
 	def render(self, interpolation):
-		logging.log(1, "Trace: MenuItemView.render(%.5f)" % 
-					(interpolation))
-		logging.debug("Rendering using model: %s" % self._model)
 		super(InputItemView, self).render(interpolation)
 		# position at the middle of the item, on the left
 		pos = (

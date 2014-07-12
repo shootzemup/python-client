@@ -59,14 +59,11 @@ class MenuItem(object):
 		"""
 		Let the behaviour of the menu item update the item
 		"""
-		logging.log(1, "Trace: MenuItem.update(%s, %s, %s)" 
-						% (stateManager, parentPos, parentSize))
 		self._behaviour.update(stateManager, parentPos, parentSize)
 
 	def render(self, interpolation):
 		"""
 		Let the view of the menu item render the item
 		"""
-		logging.log(1, "Trace: MenuItem.render(%.5f)" % interpolation)
 		self._view.render(interpolation)
 

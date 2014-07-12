@@ -15,9 +15,6 @@ class MenuItemView(object):
 
 
 	def render(self, interpolation):
-		logging.log(1, "Trace: MenuItemView.render(%.5f)" % 
-					(interpolation))
-		logging.debug("Rendering using model: %s" % self._model)
 		graphx.draw(self._model.surface, self._model.rect)
 
 

@@ -12,7 +12,6 @@ class VideoPlayer(object):
 	"""Allow to easily play a video"""
 	def __init__(self):
 		super(VideoPlayer, self).__init__()
-		logging.log(1, "Trace: VideoPlayer.__init__")
 		self._clock = pygame.time.Clock()
 		self._movie_screen = None
 		self._movie_screen_resized = None
@@ -23,8 +22,7 @@ class VideoPlayer(object):
 
 
 	def play(self, video_link, on_video_end):
-		logging.log(1, "Trace: VideoPlayer.play(%s, %s)"
-						% (video_link, on_video_end))
+		logging.info("VideoPlayer.play(%s)" % video_link)
 		self._movie = pygame.movie.Movie(video_link)
 		self._movie_screen = pygame.Surface(self._movie.get_size()).convert()
 		self._movie_screen_resized = pygame.Surface(graphx.getScreenSize())
@@ -42,7 +40,7 @@ class VideoPlayer(object):
 			(pygame.KEYDOWN, pygame.K_SPACE), self.stop)
 
 	def stop(self):
-		logging.log(1, "Trace: VideoPlayer.stop()")
+		logging.info("VideoPlayer.stop()")
 		if not self._playing:
 			return
 		self._movie.stop()
@@ -50,7 +48,6 @@ class VideoPlayer(object):
 		self._on_video_end()
 
 	def render(self):
-		logging.log(1, "Trace: VideoPlayer.render()")
 		if self._playing and self._movie.get_time() > self._movie_length - 0.1:
 			logging.info("Video ended!")
 			self.stop()
@@ -62,5 +59,3 @@ class VideoPlayer(object):
 				self._movie_screen_resized)
 			graphx.draw(self._movie_screen_resized)
 			self._clock.tick(conf['graphx']['video_player']['max_fps'])
-
-

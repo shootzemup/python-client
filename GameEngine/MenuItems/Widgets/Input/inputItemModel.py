@@ -92,10 +92,6 @@ class InputItemModel(MenuItemModel):
 	@color.setter
 	def color(self, value):
 	    self._color = value
-	
-	def resizeSurface(self, newSize):
-		self.surface =  pygame.transform.scale(
-			self._surface, newSize)
 
 	@property
 	def empty(self):
