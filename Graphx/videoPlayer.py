@@ -52,7 +52,7 @@ class VideoPlayer(object):
 			logging.info("Video ended!")
 			self.stop()
 		elif self._playing:
-			logging.debug("Playing video... %.2f/%.2f" 
+			logging.log(1, "Playing video... %.2f/%.2f" 
 						  % (self._movie.get_time(), self._movie_length))
 			pygame.transform.scale(
 				self._movie_screen, graphx.getScreenSize(),

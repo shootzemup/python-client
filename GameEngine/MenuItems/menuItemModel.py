@@ -30,28 +30,36 @@ class MenuItemModel(object):
 		logging.log(1, "Trace: MenuItemModel.__init__(%s, %s, %s, %s, %s)"
 						% (image, initPos, initSize, absolutePos, itemName))
 		# dynamically default the parameters
-		if image is None:
+		if image is None or len(image) == 0:
 			image = conf['resources']['menu']['default_menu_item']
 		if initPos is None:
 			initPos = (0, 0)
 
-		if type(image) is str:
-			self._surface = pygame.image.load(image)
-		else:
-			self._surface = image
+		# load the images
+		if type(image) is not list:
+			image = [image]
+
+		self._surfaces = []
+		for img in image:
+			if type(img) is str:
+				self._surfaces.append(pygame.image.load(img))
+			else:
+				self._surfaces.append(img)
+		self._currentSurface = 0
 
 		if initSize is None:
 			if absoluteSize:
-				initSize = self._surface.get_rect().size
+				initSize = self.surface.get_rect().size
 			else:
 				initSize = (1, 1)
 
+		self._hasFocus = False
 		self._position = initPos
 		self._size = initSize
 		self._absolutePos = absolutePos
 		self._absoluteSize = absoluteSize
 		self._itemName = itemName
-		self._rect = self._surface.get_rect()
+		self._rect = self.surface.get_rect()
 
 	@property
 	def itemName(self):
@@ -59,7 +67,19 @@ class MenuItemModel(object):
 	@itemName.setter
 	def itemName(self, value):
 	    self._itemName = value
+
+
+	@property
+	def hasFocus(self):
+	    return self._hasFocus
 	
+	def focus(self):
+		logging.info("MenuItem %s - focus" % self.itemName)
+		self._hasFocus = True
+	def unfocus(self):
+		logging.info("MenuItem %s - unfocus" % self.itemName)
+		self._hasFocus = False
+
 
 	@property
 	def position(self):
@@ -116,18 +136,28 @@ class MenuItemModel(object):
 	def rect(self):
 	    return self._rect
 
+	# returns the current used surface
 	@property
 	def surface(self):
-	    return self._surface
-
+	    return self._surfaces[self._currentSurface]
 	@surface.setter
 	def surface(self, value):
-	    self._surface = value
-	    self._rect = self._surface.get_rect()
+	    self._surfaces[self._currentSurface] = value
+	    self._rect = self.surface.get_rect()
 	    if self._absoluteSize:
 	    	self.size = self._rect.size
 
+	# this will resize all the surfaces of item to keep always the same size
 	def resizeSurface(self, newSize):
-		logging.debug("Surface resized")
-		self.surface =  pygame.transform.scale(
-			self._surface, newSize)
+		logging.debug("MenuItem %s: resizing surface to %s" 
+						% (self._itemName, newSize))
+		for i, surf in enumerate(self._surfaces):
+			self._surfaces[i] = pygame.transform.scale(surf, newSize)
+
+	# change the current used surface
+	def useSurface(self, sid):
+		if sid < 0 or sid >= len(self._surfaces):
+			logging.warning("Cannot use surface #%d. Only %d surfaces available"
+							% (sid, len(self._surfaces)))
+			sid = 0
+		self._currentSurface = sid

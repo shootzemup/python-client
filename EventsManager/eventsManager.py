@@ -92,7 +92,7 @@ class EventsManager(object):
 		# allow to check key combination, that can be used for shortcuts
 		for name in self._registered_combinations:
 			combin = self._registered_combinations[name]
-			logging.debug("Checking combination: %s" % (combin))
+			logging.log(1, "Checking combination: %s" % (combin))
 			# activate is true if combination contains either keycode or 
 			# mousebutton list
 			activate = len(combin['keycodes']) > 0 or \

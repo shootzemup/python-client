@@ -9,6 +9,8 @@ from conf import conf
 from GameEngine.MenuItems.menuItemModel import MenuItemModel
 
 class InputItemModel(MenuItemModel):
+	UNFOCUSED_SURFACE = 0
+	FOCUSED_SURFACE = 1
 	"""
 	Represents the model of an input, which is a specialized menu item
 	where the user can type some text
@@ -24,13 +26,15 @@ class InputItemModel(MenuItemModel):
 		**kwargs -- other arguments will be given to the MenuItemModel
 		"""
 		if not 'image' in kwargs:
-			kwargs['image'] = conf['resources']['menu']['input']['default_background']
+			kwargs['image'] = [
+				conf['resources']['menu']['input']['default_background'],
+				conf['resources']['menu']['input']['focused_default_background']
+			]
 		super(InputItemModel, self).__init__(**kwargs)
 		logging.log(1, "Trace: InputItemModel.__init__(%s, %s, %s)"
 						% (defaultText, placeHolder, kwargs))
 		self._defaultText = defaultText
 		self._placeHolder = placeHolder
-		self._hasFocus = False
 		self._textSurface = None
 		self._textSurfaceRect = None
 		self._text = defaultText if defaultText else ''
@@ -46,17 +50,6 @@ class InputItemModel(MenuItemModel):
 	def precision(self, value):
 	    self._precision = value
 	
-	@property
-	def hasFocus(self):
-	    return self._hasFocus
-	
-	def focus(self):
-		logging.info("InputItem %s - focus" % self.itemName)
-		self._hasFocus = True
-	def unfocus(self):
-		logging.info("InputItem %s - unfocus" % self.itemName)
-		self._hasFocus = False
-
 	@property
 	def textChanged(self):
 	    return self._textChanged
@@ -103,3 +96,14 @@ class InputItemModel(MenuItemModel):
 	@property
 	def placeHolder(self):
 	    return self._placeHolder
+
+	# override focus method to change the background when focused
+	def focus(self):
+		logging.info("MenuItem %s - focus" % self.itemName)
+		self._hasFocus = True
+		self.useSurface(self.FOCUSED_SURFACE)
+
+	def unfocus(self):
+		logging.info("MenuItem %s - unfocus" % self.itemName)
+		self._hasFocus = False
+		self.useSurface(self.UNFOCUSED_SURFACE)

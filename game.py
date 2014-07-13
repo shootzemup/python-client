@@ -143,7 +143,7 @@ class Game(object):
 	def handleEvents(self):
 		logging.log(1, 'Trace: Game.handleEvents()')
 		for event in pygame.event.get():
-			logging.debug('Event: %s', event)
+			logging.log(1, 'Event: %s', event)
 			eventsManager.handleEvent(event)
 
 	#m: handlePressed: handle the keyboard and the mouse state

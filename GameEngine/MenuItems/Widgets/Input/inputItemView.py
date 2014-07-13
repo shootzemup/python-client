@@ -19,7 +19,7 @@ class InputItemView(MenuItemView):
 	def render(self, interpolation):
 		super(InputItemView, self).render(interpolation)
 		# position at the middle of the item, on the left
-		pos = (
+		textPos = (
 			self._model.realPosition[0] - self._model.realSize[0] / 2 + 5,
 			self._model.realPosition[1] - self._model.textSurfaceSize[1] / 2
 		)
@@ -37,4 +37,4 @@ class InputItemView(MenuItemView):
 			clip_pos = (self._model.textSurfaceSize[0] - clip_size[0],
 				self._model.textSurfaceSize[1] - clip_size[1])
 
-		graphx.draw(self._model.textSurface, pos, clip_pos, clip_size)
+		graphx.draw(self._model.textSurface, textPos, clip_pos, clip_size)
