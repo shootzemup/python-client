@@ -13,9 +13,7 @@ class InputItem(MenuItem):
 	"""Represent a menu item that display a string"""
 	def __init__(self, **kwargs):
 		"""
-		Initialize a new labelItem
-		Note: you can initialize a label item by simply givin a labelModel to
-		a simple menu item. This is just a shortcut
+		Initialize a new InputItem
 		**kwargs -- all the arguments will be given to the InputItemModel
 		"""
 		# a label item is made of a label model, view and behaviour
@@ -27,3 +25,11 @@ class InputItem(MenuItem):
 			menuItemView=view)
 		logging.log(1, "Trace: InputItem.__init__(%s)" 
 						% (kwargs))
+
+	def focus(self):
+		""" Let the behaviour make the model focused """
+		return self._behaviour.focus()
+
+	def unfocus(self):
+		""" Let the behaviour make the model unfocused """
+		self._behaviour.unfocus()

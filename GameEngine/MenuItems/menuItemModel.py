@@ -54,6 +54,7 @@ class MenuItemModel(object):
 				initSize = (1, 1)
 
 		self._hasFocus = False
+		self._focusable = True
 		self._position = initPos
 		self._size = initSize
 		self._absolutePos = absolutePos
@@ -70,12 +71,28 @@ class MenuItemModel(object):
 
 
 	@property
+	def focusable(self):
+	    return self._focusable
+	@focusable.setter
+	def focusable(self, value):
+	    self._focusable = value
+	
+	@property
 	def hasFocus(self):
 	    return self._hasFocus
 	
 	def focus(self):
+		"""
+		Mark the item as focused. This happens when the user click on the item.
+		Returns true if the item is focused, false if the item is not focusabled
+		(ex: LabelMenuItems are not focusable)
+		"""
 		logging.info("MenuItem %s - focus" % self.itemName)
-		self._hasFocus = True
+		if self._focusable:
+			self._hasFocus = True
+			return True
+		return False
+		
 	def unfocus(self):
 		logging.info("MenuItem %s - unfocus" % self.itemName)
 		self._hasFocus = False

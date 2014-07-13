@@ -61,3 +61,10 @@ class MenuItem(object):
 		"""
 		self._view.render(interpolation)
 
+
+	def focus(self):
+		return self._model.focus()
+	def unfocus(self):
+		self._model.unfocus()
+	def hasFocus(self):
+		return self._model.hasFocus

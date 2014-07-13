@@ -102,6 +102,7 @@ class InputItemModel(MenuItemModel):
 		logging.info("MenuItem %s - focus" % self.itemName)
 		self._hasFocus = True
 		self.useSurface(self.FOCUSED_SURFACE)
+		return True
 
 	def unfocus(self):
 		logging.info("MenuItem %s - unfocus" % self.itemName)

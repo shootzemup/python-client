@@ -21,17 +21,24 @@ class ContainerModel(MenuItemModel):
 		super(ContainerModel, self).__init__(image=image, **kwargs)
 
 		self._menuItems = []
-			
-	@property
-	def menuItem(self, index):
+		self._focusedItem = -1
+
+	def get_menuItem(self, index):
 	    return self._menuItems[index]
-	@menuItem.setter
-	def menuItem(self, index, value):
+	def set_menuItem(self, index, value):
 	    self._menuItems[index] = value
 
 	@property
 	def menuItems(self):
 	    return self._menuItems
+
+	@property
+	def focusedItem(self):
+	    return self._focusedItem
+	@focusedItem.setter
+	def focusedItem(self, value):
+	    self._focusedItem = value
+	
 
 	def addMenuItem(self, item):
 		"""
@@ -42,3 +49,9 @@ class ContainerModel(MenuItemModel):
 			self._menuItems += item
 		else:
 			self._menuItems.append(item)
+		# if no item is focused, focus the first focusable
+		if self._focusedItem == -1:
+			for i, item in enumerate(self.menuItems):
+				if item.focus():
+					self._focusedItem = i
+					break

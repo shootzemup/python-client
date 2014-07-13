@@ -34,6 +34,7 @@ class LabelItemModel(MenuItemModel):
 						% (text, color, kwargs))
 		self._text = text
 		self._color = color
+		self._focusable = False
 
 	def write(self, text, color=None):
 		myFont = Font(conf['resources']['font']['default'],

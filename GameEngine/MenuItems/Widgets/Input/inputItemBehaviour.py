@@ -46,12 +46,19 @@ class InputItemBehaviour(MenuItemBehaviour):
 		if button == 1 or button == 3:
 			if self._model.intersect(pos):
 				if not self._model.hasFocus:
-					self._model.focus()
-					self._register_events()
+					self.focus()
 			elif self._model.hasFocus:
-				self._model.unfocus()
-				self._unregister_events()
+				self.unfocus()
+				
+	def focus(self):
+		if self._model.focusable:
+			self._model.focus()
+			self._register_events()
+		return self._model.focusable
 
+	def unfocus(self):
+		self._model.unfocus()
+		self._unregister_events()
 
 	def onKeyPressed(self, key, ascii):
 		logging.info("InputItem %s received event: %s" 
