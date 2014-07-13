@@ -21,6 +21,8 @@ class MenuItemBehaviour(object):
 	def _computeRealSize(self, parentSize):
 		realSize = (parentSize[0] * self._model.size[0], 
 					parentSize[1] * self._model.size[1])
+		logging.debug("%s: Resizing from: %s to %s"
+					  % (self._model.itemName, self._model.size, realSize))
 		# do not resize if the size is the same as it will involve useless
 		# copy
 		if self._model.realSize[0] != realSize[0] or \
@@ -39,13 +41,21 @@ class MenuItemBehaviour(object):
 			(parentPos[0] + self._model.position[0] * parentSize[0] / 2,
 			 parentPos[1] + self._model.position[1] * parentSize[1] / 2)
 
-	def update(self, stateManager, parentPos, parentSize):
-		if self._model.absolute:  # the model contains the real positions
-			# position is the position of the center pixel 
+	def computeSize(self, parentPos, parentSize):
+		logging.debug("Parent position: %s, parent size: %s" % (parentPos, parentSize))
+		if self._model.absoluteSize:  # model contains the real size
 			# size is a multiple of pixels
 			self._computeRealSize((1, 1))
-			self._computeRealPos((0, 0), (1, 1))
-		else:  # the model contains relative positions/size
+		else:
 			# compute size first as it will be used bu the position computation
 			self._computeRealSize(parentSize)
+
+		if self._model.absolutePos:  # the model contains the real positions
+			# position is the position of the center pixel 
+			self._computeRealPos((0, 0), (1, 1))
+		else:  # the model contains relative positions/size
 			self._computeRealPos(parentPos, parentSize)
+
+
+	def update(self, stateManager):
+		pass

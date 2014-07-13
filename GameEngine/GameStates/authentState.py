@@ -20,28 +20,30 @@ class AuthentState(State):
 
 		userNameLabel = LabelItem(
 			text="Login",
-			initSize=(0.1, 0.05),
 			initPos=(0, -0.2),
-			itemName="UserNameLabel")
+			itemName="UserNameLabel",
+			absoluteSize=True)
 		inputUserName = InputItem(
-			placeHolder="User name", 
-			initSize=(0.25, 0.025),
+			placeHolder="User name",
 			initPos=(0, -0.1),
-			itemName="UserName")
+			itemName="UserName",
+			absoluteSize=True)
 		passwordLabel = LabelItem(
 			text="Password",
-			initSize=(0.1, 0.05),
 			initPos=(0, 0),
-			itemName="passwordLabel")
+			itemName="passwordLabel",
+			absoluteSize=True)
 		inputPassword = InputItem(
-			placeHolder="Password", 
-			initSize=(0.25, 0.025),
+			placeHolder="Password",
 			initPos=(0, 0.1),
-			itemName="Password")
+			itemName="Password",
+			absoluteSize=True)
 		self._page.addMenuItem(userNameLabel)
 		self._page.addMenuItem(inputUserName)
 		self._page.addMenuItem(passwordLabel)
 		self._page.addMenuItem(inputPassword)
+
+		self._page.computeSize()
 
 	def update(self, stateManager):
 		self._page.update(stateManager)

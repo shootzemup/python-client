@@ -13,7 +13,7 @@ class InputItemModel(MenuItemModel):
 	Represents the model of an input, which is a specialized menu item
 	where the user can type some text
 	"""
-	def __init__(self, defaultText=None, placeHolder="", precision=None,
+	def __init__(self, defaultText="", placeHolder="", precision=None,
 				 color=(255, 255, 255), **kwargs):
 		"""
 		Initialize a new model for an input item
@@ -35,7 +35,7 @@ class InputItemModel(MenuItemModel):
 		self._textSurfaceRect = None
 		self._text = defaultText if defaultText else ''
 		self._color = color
-		self._textChanged = True
+		self._textChanged = False
 		self._precision = precision or conf['resources']['font']['default_precision']
 		self._empty = len(self._text) == 0
 		
@@ -81,6 +81,9 @@ class InputItemModel(MenuItemModel):
 	def textSurface(self, value):
 	    self._textSurface = value
 	    self._textSurfaceRect = self._textSurface.get_rect()
+	    if self._absoluteSize:
+	    	# the X value of the size stays the same
+	    	self.size = (self.size[0], self._textSurfaceRect.size[1])
 		
 	@property
 	def textSurfaceSize(self):

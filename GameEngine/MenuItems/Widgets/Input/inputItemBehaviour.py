@@ -25,6 +25,10 @@ class InputItemBehaviour(MenuItemBehaviour):
 		eventsManager.registerEvent(
 			'onInputClick-' + self._model.itemName, (pygame.MOUSEBUTTONDOWN),
 			 self.onInputClick)
+		self.write(
+			self._model.text if not self._model.empty else self._model.placeHolder,
+			self._model.color if not self._model.empty else 
+				(self._model.color[0] / 2, self._model.color[1] / 2, self._model.color[2] / 2))
 
 	def _register_events(self):
 		logging.info("Registering events for item %s" % self._model.itemName)
@@ -73,8 +77,8 @@ class InputItemBehaviour(MenuItemBehaviour):
 			(fontSurface.get_rect().size[0] * (self._model.realSize[1] - 2 *  conf['resources']['menu']['input']['margins'][1]) / fontSurface.get_rect().size[1],
 			 self._model.realSize[1] - 2 *  conf['resources']['menu']['input']['margins'][1]))
 
-	def update(self, stateManager, parentPos, parentSize):
-		super(InputItemBehaviour, self).update(stateManager, parentPos, parentSize)
+	def update(self, stateManager):
+		super(InputItemBehaviour, self).update(stateManager)
 		if self._model.textChanged:
 			self.write(
 				self._model.text if not self._model.empty else self._model.placeHolder,

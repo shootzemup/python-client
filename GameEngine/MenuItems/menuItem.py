@@ -15,8 +15,7 @@ class MenuItem(object):
 	store its internal data and a view to display it.
 	"""
 	def __init__(self, menuItemModel=None, menuItemBehaviour=None, 
-				menuItemView=None, imageLink=None, initPos=(0,0), 
-				initSize=(1, 1), absolute=False, itemName="Unamed"):
+				menuItemView=None, **kwargs):
 		"""
 		Initialize the menu item
 		menuItemModel -- a custom model for this menu item. Note that if
@@ -24,24 +23,13 @@ class MenuItem(object):
 						 menuItemBehaviour and menuItemView) will be ignored
 		menuItemBehaviour -- a custom behaviour for this menu item
 		menuItemView -- a custom view for this menu item
-		imageLink -- link to the image corresponding to this menu item
-		initPos -- the initial position of the item to set as the center of the 
-				   surface. If `absolute` is `False` (default), the
-				   position will be a percentage of the size of
-				   the object, starting from the center.
-				   eg: (1, -1) will be the upper left
-		initSize -- the initial size of the item.
-		absolute -- if set to `True`, the position and the size will be used as
-					stated. If no, the size and the position will be computed
-					from the size of the parent at render time
-		itemName -- used only for debugging identification
+		kwargs -- the keywords arguments are given to the menuItemModel
 		"""
 		super(MenuItem, self).__init__()
-		logging.log(1, "Trace: MenuItem.__init__(%s, %s, %s, %s)"
-						% (imageLink, initPos, initSize, absolute))
+		logging.log(1, "Trace: MenuItem.__init__(%s)"
+						% (kwargs))
 		if menuItemModel is None:
-			self._model = MenuItemModel(imageLink, initPos, initSize, absolute, 
-										itemName)
+			self._model = MenuItemModel(**kwargs)
 		else:
 			self._model = menuItemModel
 
@@ -55,11 +43,17 @@ class MenuItem(object):
 		else:
 			self._view = menuItemView
 
-	def update(self, stateManager, parentPos, parentSize):
+	def update(self, stateManager):
 		"""
 		Let the behaviour of the menu item update the item
 		"""
-		self._behaviour.update(stateManager, parentPos, parentSize)
+		self._behaviour.update(stateManager)
+
+	def computeSize(self, parentPos, parentSize):
+		"""
+		Let the behaviour of the menuitem compute the real size of the item
+		"""
+		self._behaviour.computeSize(parentPos, parentSize)
 
 	def render(self, interpolation):
 		"""
