@@ -4,6 +4,7 @@ import pygame
 from pygame.locals import *
 import logging
 from functools import wraps
+from pprint import pformat
 
 from resources.i18n.lang import i18n
 from conf import conf
@@ -114,6 +115,13 @@ class EventsManager(object):
 
 
 	def _unregister_waiting_queue(self):
+		if len(self._events_to_delete) > 0:
+			logging.debug("Deleting %d events from list: %s"
+						 % (len(self._events_to_delete), pformat(self._registered)))
+		if len(self._events_to_delete) > 0:
+			logging.debug("Deleting %d combination from list: %s" 
+						 % (len(self._combinations_to_delete), 
+						 	pformat(self._registered_combinations)))
 		# delete waiting events to be unregistered
 		for name in self._events_to_delete:
 			del self._registered[self._names[name]][name]
@@ -138,6 +146,12 @@ class EventsManager(object):
 		"""
 		logging.debug("Registering combination %s on callback: %s"
 						% (name, callback))
+		# if the combination has previously been unregistered but the 
+		# _unregister_waiting_queue method has not been called yet,
+		# we need to remove this combination from the unregister waiting queue.
+		if name in self._combinations_to_delete:
+			del self._combinations_to_delete[name]
+
 		self._registered_combinations[name] = {
 			'keycodes': keycodes,
 			'mousebuttons': mousebuttons,
@@ -170,6 +184,12 @@ class EventsManager(object):
 					fired
 		"""
 		logging.debug("Registering event %s on callback: %s" % (name, callback))
+		# if the event has previously been unregistered but the 
+		# _unregister_waiting_queue method has not been called yet,
+		# we need to remove this event from the unregister waiting queue.
+		if name in self._events_to_delete:
+			del self._events_to_delete[self._events_to_delete.index(name)]
+
 		# create or add the the dict of callbacks 
 		# related to the event
 		if event in self._registered:

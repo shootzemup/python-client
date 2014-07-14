@@ -37,7 +37,8 @@ class AuthentState(State):
 			placeHolder="Password",
 			initPos=(0, 0.1),
 			itemName="Password",
-			absoluteSize=True)
+			absoluteSize=True,
+			inputType='password')
 		self._page.addMenuItem(userNameLabel)
 		self._page.addMenuItem(inputUserName)
 		self._page.addMenuItem(passwordLabel)

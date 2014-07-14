@@ -47,9 +47,9 @@ class InputItemBehaviour(MenuItemBehaviour):
 			if self._model.intersect(pos):
 				if not self._model.hasFocus:
 					self.focus()
-			elif self._model.hasFocus:
+			else:
 				self.unfocus()
-				
+
 	def focus(self):
 		if self._model.focusable:
 			self._model.focus()
@@ -57,8 +57,10 @@ class InputItemBehaviour(MenuItemBehaviour):
 		return self._model.focusable
 
 	def unfocus(self):
-		self._model.unfocus()
-		self._unregister_events()
+		logging.error("UNFOCUS %s" % self._model.itemName)
+		if self._model.hasFocus:
+			self._model.unfocus()
+			self._unregister_events()
 
 	def onKeyPressed(self, key, ascii):
 		logging.info("InputItem %s received event: %s" 
@@ -84,10 +86,18 @@ class InputItemBehaviour(MenuItemBehaviour):
 			(fontSurface.get_rect().size[0] * (self._model.realSize[1] - 2 *  conf['resources']['menu']['input']['margins'][1]) / fontSurface.get_rect().size[1],
 			 self._model.realSize[1] - 2 *  conf['resources']['menu']['input']['margins'][1]))
 
+	def _transform_by_type(self, text):
+		"""
+		Allow to make a transformation on the text before it is written
+		depending on the type
+		"""
+		return '*' * len(text) if self._model.inputType == 'password' else text
+
 	def update(self, stateManager):
 		super(InputItemBehaviour, self).update(stateManager)
 		if self._model.textChanged:
 			self.write(
-				self._model.text if not self._model.empty else self._model.placeHolder,
+				self._transform_by_type(self._model.text) if \
+					not self._model.empty else self._model.placeHolder,
 				self._model.color if not self._model.empty else 
 					(self._model.color[0] / 2, self._model.color[1] / 2, self._model.color[2] / 2))

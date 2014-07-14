@@ -16,13 +16,15 @@ class InputItemModel(MenuItemModel):
 	where the user can type some text
 	"""
 	def __init__(self, defaultText="", placeHolder="", precision=None,
-				 color=(255, 255, 255), **kwargs):
+				 color=(255, 255, 255), inputType="text", **kwargs):
 		"""
 		Initialize a new model for an input item
 		defaultText -- the text to be displayed, that the user can edit
 		placeHolder -- the text to be displayed when no text is inputed yet
 		precision -- the precision of the drawing of the text
 		color -- the tuple (r, g, b) of the color of the text
+		inputType -- type of the input. Can be either 'text' or 'password'. 
+					 Default is 'text'
 		**kwargs -- other arguments will be given to the MenuItemModel
 		"""
 		if not 'image' in kwargs:
@@ -42,7 +44,16 @@ class InputItemModel(MenuItemModel):
 		self._textChanged = False
 		self._precision = precision or conf['resources']['font']['default_precision']
 		self._empty = len(self._text) == 0
+		self._inputType = inputType
 		
+	@property
+	def inputType(self):
+	    return self._inputType
+	@inputType.setter
+	def inputType(self, value):
+	    self._inputType = value
+	
+
 	@property
 	def precision(self):
 	    return self._precision
