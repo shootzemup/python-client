@@ -41,6 +41,11 @@ conf = {
 				'default_background': 'resources/menu/input/default_background.png',
 				'focused_default_background': 'resources/menu/input/focused_default_background.png',
 				'margins': (5, 2),  # x, y
+			},
+			'button': {
+				'default_background': 'resources/menu/button/default_background.png',
+				'focused_default_background': 'resources/menu/button/hover_default_background.png',
+				'pressed_default_background': 'resources/menu/button/pressed_default_background.png'
 			}
 		
 		},

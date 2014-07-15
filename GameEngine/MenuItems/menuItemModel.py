@@ -87,14 +87,14 @@ class MenuItemModel(object):
 		Returns true if the item is focused, false if the item is not focusabled
 		(ex: LabelMenuItems are not focusable)
 		"""
-		logging.info("MenuItem %s - focus" % self.itemName)
+		logging.debug("MenuItem %s - focus" % self.itemName)
 		if self._focusable:
 			self._hasFocus = True
 			return True
 		return False
 		
 	def unfocus(self):
-		logging.info("MenuItem %s - unfocus" % self.itemName)
+		logging.debug("MenuItem %s - unfocus" % self.itemName)
 		self._hasFocus = False
 
 

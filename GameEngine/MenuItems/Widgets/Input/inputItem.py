@@ -33,3 +33,7 @@ class InputItem(MenuItem):
 	def unfocus(self):
 		""" Let the behaviour make the model unfocused """
 		self._behaviour.unfocus()
+
+	def value(self):
+		""" Returns the current value of the label """
+		return self._model.text

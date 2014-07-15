@@ -43,9 +43,12 @@ class EventsManager(object):
 		# list of registered combinations
 		self._registered_combinations = {}
 
-		# waiting to be deleted at the next update
+		# waiting to be deleted or registered at the next update
 		self._combinations_to_delete = []
 		self._events_to_delete = []
+
+		self._combinations_to_register = []
+		self._events_to_register = []
 
 	def _call_callbacks(self, event, event_value=None):
 		for cb_name in self._registered[event]:
@@ -57,10 +60,12 @@ class EventsManager(object):
 
 	def handleEvent(self, event):
 		# construct the event if it is valid
+		ev_val = None
 		if event.type == KEYDOWN or event.type == KEYUP:
 			reg_ev = (event.type, event.key)
 		elif event.type == MOUSEBUTTONDOWN or event.type == MOUSEBUTTONUP:
 			reg_ev = (event.type, event.button)
+			ev_val = (event.pos,)
 		elif event.type == MOUSEMOTION:
 			reg_ev = (event.type, event.pos)
 		elif event.type == QUIT:
@@ -74,7 +79,7 @@ class EventsManager(object):
 			# import pdb
 			# pdb.set_trace()
 			# if it is, call all the callback registered
-			self._call_callbacks(reg_ev)
+			self._call_callbacks(reg_ev, ev_val)
 
 		# now do the same without the value, the value will be given to the
 		# callback
@@ -85,7 +90,7 @@ class EventsManager(object):
 			elif event.type == MOUSEBUTTONDOWN or event.type == MOUSEBUTTONUP:
 				self._call_callbacks((event.type), (event.button, event.pos))
 			elif event.type == MOUSEMOTION:
-				self._call_callbacks((event.type), event.pos)
+				self._call_callbacks((event.type), (event.pos,))
 			elif not event.type in self._ignored_events:
 				logging.warning("Unexpected event: %s" % event)
 
@@ -111,6 +116,7 @@ class EventsManager(object):
 	def update(self):
 		# if events or combinations are waiting to be deleted, do it now.
 		# (note: this function is called once per frame)
+		self._register_waiting_queue()
 		self._unregister_waiting_queue()
 
 
@@ -132,6 +138,38 @@ class EventsManager(object):
 			del self._registered_combinations[name]
 		del self._combinations_to_delete[:]
 
+	def _register_waiting_queue(self):
+		for name, event, callback in self._events_to_register:
+			# if the event has previously been unregistered but the 
+			# _unregister_waiting_queue method has not been called yet,
+			# we need to remove this event from the unregister waiting queue.
+			if name in self._events_to_delete:
+				del self._events_to_delete[self._events_to_delete.index(name)]
+
+			# create or add the the dict of callbacks 
+			# related to the event
+			if event in self._registered:
+				self._registered[event][name] = callback
+			else:
+				self._registered[event] = {name: callback}
+			# save that the name matching this event
+			self._names[name] = event
+		del self._events_to_register[:]
+
+		for name, keycodes, mousebuttons, callback in self._combinations_to_register:
+			# if the combination has previously been unregistered but the 
+			# _unregister_waiting_queue method has not been called yet,
+			# we need to remove this combination from the unregister waiting queue.
+			if name in self._combinations_to_delete:
+				del self._combinations_to_delete[name]
+
+			self._registered_combinations[name] = {
+				'keycodes': keycodes,
+				'mousebuttons': mousebuttons,
+				'callback': callback
+			}
+		del self._combinations_to_register[:]
+
 	def registerCombination(self, name, keycodes, mousebuttons, callback):
 		"""
 		Register a new callback to be called when the given key combination
@@ -146,19 +184,14 @@ class EventsManager(object):
 		"""
 		logging.debug("Registering combination %s on callback: %s"
 						% (name, callback))
-		# if the combination has previously been unregistered but the 
-		# _unregister_waiting_queue method has not been called yet,
-		# we need to remove this combination from the unregister waiting queue.
-		if name in self._combinations_to_delete:
-			del self._combinations_to_delete[name]
-
-		self._registered_combinations[name] = {
-			'keycodes': keycodes,
-			'mousebuttons': mousebuttons,
-			'callback': callback
-		}
+		self._combinations_to_register.append(
+			(name, keycodes, mousebuttons, callback))
 
 	def unregisterCombination(self, name):
+		if type(name) is list:
+			for n in name:
+				self.unregisterCombination(n)
+			return
 		logging.debug("Unregistering event '%s' from list: %s"
 						% (name, self._registered_combinations))
 		# add the combination to the list of combinations waiting to be deleted
@@ -184,22 +217,13 @@ class EventsManager(object):
 					fired
 		"""
 		logging.debug("Registering event %s on callback: %s" % (name, callback))
-		# if the event has previously been unregistered but the 
-		# _unregister_waiting_queue method has not been called yet,
-		# we need to remove this event from the unregister waiting queue.
-		if name in self._events_to_delete:
-			del self._events_to_delete[self._events_to_delete.index(name)]
-
-		# create or add the the dict of callbacks 
-		# related to the event
-		if event in self._registered:
-			self._registered[event][name] = callback
-		else:
-			self._registered[event] = {name: callback}
-		# save that the name matching this event
-		self._names[name] = event
+		self._events_to_register.append((name, event, callback))
 
 	def unregisterEvent(self, name):
+		if type(name) is list:
+			for n in name:
+				self.unregisterEvent(n)
+			return
 		#retrieve the event from the name, then delete the callback
 		# that is registered under this name
 		logging.debug("Unregistering event '%s' from list: %s" 
@@ -227,8 +251,9 @@ class EventsManager(object):
 handleEvent = singletonize(EventsManager.handleEvent)
 handlePressed = singletonize(EventsManager.handlePressed)
 registerCombination = singletonize(EventsManager.registerCombination)
-unregisterCombination = singletonize(EventsManager.unregisterCombination)
+unregisterCombinations = singletonize(EventsManager.unregisterCombination)
 registerEvent = singletonize(EventsManager.registerEvent)
 unregisterEvent = singletonize(EventsManager.unregisterEvent)
+unregisterEvents = singletonize(EventsManager.unregisterEvent)
 update = singletonize(EventsManager.update)
 listRegisteredEvents = singletonize(EventsManager.listRegisteredEvents)

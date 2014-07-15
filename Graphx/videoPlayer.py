@@ -45,6 +45,9 @@ class VideoPlayer(object):
 			return
 		self._movie.stop()
 		self._playing = False
+		eventsManager.unregisterEvents(['VideoPlayer.skipVideoUsingSpace', 
+			'VideoPlayer.skipVideoUsingEnter',
+			'VideoPlayer.skipVideoUsingEscape'])
 		self._on_video_end()
 
 	def render(self):
