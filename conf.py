@@ -25,6 +25,13 @@ conf = {
 		'key_repeat_delay': 200,
 		'key_repeat_interval': 1
 	},
+	'net': {
+		'authenticator': {
+			'host': '127.0.0.1',
+			'port': '8000',
+			'hash': ['sha512', 'sha256', 'sha1', 'md5']  # per priority if available
+		}
+	},
 	'resources': {
 		'intro_video': 'resources/intro.mpg',
 		'font': {
