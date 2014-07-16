@@ -28,7 +28,7 @@ conf = {
 	'net': {
 		'authenticator': {
 			'host': '127.0.0.1',
-			'port': '8000',
+			'port': 8000,
 			'hash': ['sha512', 'sha256', 'sha1', 'md5']  # per priority if available
 		}
 	},

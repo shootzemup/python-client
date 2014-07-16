@@ -10,6 +10,7 @@ from conf import conf
 from GameEngine.GameStates.stateManager import StateManager
 from Graphx import graphx
 from EventsManager import eventsManager
+from Network import net
 
 DONE = False
 
@@ -22,6 +23,7 @@ class Game(object):
 		#c: initialize singletons
 		graphx.init()
 		eventsManager.init()
+		net.init()
 
 		#c: register events
 		eventsManager.registerEvent(
@@ -138,6 +140,7 @@ class Game(object):
 						nb_updates))
 				self._last_caption_update = time.time()
 			self._nb_renders += 1  # used for statistics
+		self.cleanUp()
 
 	#m: handleEvents: handle a single event from the event queue
 	def handleEvents(self):
@@ -176,4 +179,5 @@ class Game(object):
 	#m: cleanUp: clean the resources that cannot be automatically cleared by python
 	def cleanUp(self):
 		logging.log(1, "Trace: Game.cleanUp")
+		net.stop()
 		graphx.cleanUp()

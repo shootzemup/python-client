@@ -6,6 +6,7 @@ from GameEngine.MenuItems.container import Container
 from GameEngine.MenuItems.Widgets.Input.inputItem import InputItem
 from GameEngine.MenuItems.Widgets.Label.labelItem import LabelItem
 from GameEngine.MenuItems.Widgets.Button.button import Button
+from Network import net
 
 
 class AuthentState(State):
@@ -57,6 +58,10 @@ class AuthentState(State):
 		password = self._inputPassword.value()
 		logging.info("Submitting authentication request: \
 Username=%s, Password=%s" % (username, password))
+		net.authenticate(username, password, self._on_submit)
+
+	def _on_submit(self, err, data):
+		logging.info('Authent State got submit result: %s, %s' % (err, data))
 
 	def update(self, stateManager):
 		self._page.update(stateManager)

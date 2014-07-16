@@ -45,6 +45,7 @@ def main():
         game.run()
     except BaseException as e:
         logging.exception("An unexpected error occured during game run.")
+        game.cleanUp()
     logging.info("Total game running time: %s" % guess_time_unit(
         time.time() - game.init_time))
     logging.info("Average rendering time: %.5fs" % 

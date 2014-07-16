@@ -53,7 +53,7 @@ class Graphx(object):
 		return self._screen_size
 
 	def cleanUp(self):
-		pygame.freetype.quit()
+		pygame.font.quit()
 		pass
 
 draw = singletonize(Graphx.draw)
